@@ -10,14 +10,27 @@ const Messages = () => {
     instagramDM: 'Oi! Adorei seu perfil! Vejo que você está investindo bastante nas redes sociais. Que tal conversarmos sobre como potencializar ainda mais seus resultados?',
     closing: 'Que tal começarmos essa parceria agora mesmo? Estou aqui para tirar todas as suas dúvidas e mostrar como podemos fazer sua empresa crescer!',
     presentation: 'A Elevare é uma agência especializada em marketing digital e gestão de redes sociais. Trabalhamos com estratégias personalizadas para cada cliente, sempre focando em resultados reais e crescimento sustentável.',
-    followUp: 'Olá! Espero que esteja tudo bem! Só queria verificar se você teve a chance de avaliar nossa proposta. Estou à disposição para qualquer dúvida!'
+    followUp: 'Olá! Espero que esteja tudo bem! Só queria verificar se você teve a chance de avaliar nossa proposta. Estou à disposição para qualquer dúvida!',
+    blackFridayWhatsApp: '🖤 BLACK FRIDAY ELEVARE! 🖤\n\nOlá! Aproveite a maior promoção do ano! 🎉\n\nAgora é o momento perfeito para transformar suas redes sociais e alavancar seus resultados!\n\n🔥 Descontos EXCLUSIVOS nos nossos pacotes\n💎 Condições especiais de pagamento\n⚡ Suporte prioritário\n\nEssa oferta é por tempo limitado! Quer saber mais detalhes?',
+    blackFridayInstagram: '🖤 BLACK FRIDAY chegou! 🖤\n\nOi! Que tal aproveitar a maior promoção do ano para dar um UP nas suas redes sociais? 🚀\n\n🔥 Descontos imperdíveis\n💎 Condições especiais\n⚡ Suporte VIP\n\nEssa oportunidade é única! Vamos conversar? 💬',
+    blackFridayClosing: '🖤 BLACK FRIDAY - Últimas Horas! 🖤\n\nEssa é sua chance de transformar suas redes sociais com condições EXCLUSIVAS! 🎯\n\n✅ Descontos especiais\n✅ Condições de pagamento facilitadas\n✅ Suporte prioritário\n\nA oferta termina em breve! Vamos fechar essa parceria agora? Estou aqui para tirar todas as suas dúvidas! 💪',
+    blackFridayFollowUp: '🖤 Olá! Lembrei de você na nossa BLACK FRIDAY! 🖤\n\nAinda está pensando? Essa é a melhor oportunidade do ano para investir no crescimento das suas redes sociais! 🚀\n\nA oferta está acabando e não queremos que você perca essa chance única!\n\nPosso te ajudar com alguma dúvida? Estou à disposição! 💬'
   })
 
   useEffect(() => {
     const loadMessages = async () => {
       const saved = await storage.get(getUserKey('messages'), null)
       if (saved) {
-        setMessages(saved)
+        // Mesclar mensagens salvas com as novas mensagens de Black Friday
+        setMessages(prev => ({
+          ...prev,
+          ...saved,
+          // Garantir que as mensagens de Black Friday existam (mesmo que não estejam salvas)
+          blackFridayWhatsApp: saved.blackFridayWhatsApp || prev.blackFridayWhatsApp,
+          blackFridayInstagram: saved.blackFridayInstagram || prev.blackFridayInstagram,
+          blackFridayClosing: saved.blackFridayClosing || prev.blackFridayClosing,
+          blackFridayFollowUp: saved.blackFridayFollowUp || prev.blackFridayFollowUp
+        }))
       }
     }
     loadMessages()
@@ -89,6 +102,34 @@ const Messages = () => {
       icon: '🔄',
       description: 'Scripts de acompanhamento'
     },
+    { 
+      key: 'blackFridayWhatsApp', 
+      title: '🖤 Black Friday - WhatsApp', 
+      icon: '🖤',
+      description: 'Mensagem de Black Friday para WhatsApp',
+      highlight: true
+    },
+    { 
+      key: 'blackFridayInstagram', 
+      title: '🖤 Black Friday - Instagram', 
+      icon: '🖤',
+      description: 'Mensagem de Black Friday para Instagram DM',
+      highlight: true
+    },
+    { 
+      key: 'blackFridayClosing', 
+      title: '🖤 Black Friday - Fechamento', 
+      icon: '🖤',
+      description: 'Script de fechamento para Black Friday',
+      highlight: true
+    },
+    { 
+      key: 'blackFridayFollowUp', 
+      title: '🖤 Black Friday - Follow-up', 
+      icon: '🖤',
+      description: 'Follow-up com urgência de Black Friday',
+      highlight: true
+    },
   ]
 
   return (
@@ -100,7 +141,7 @@ const Messages = () => {
 
       <div className="messages-grid">
         {messageTypes.map((msgType) => (
-          <div key={msgType.key} className="message-card">
+          <div key={msgType.key} className={`message-card ${msgType.highlight ? 'highlight' : ''}`}>
             <div className="message-card-header">
               <div className="message-header-info">
                 <span className="message-icon">{msgType.icon}</span>

@@ -9,44 +9,82 @@ const Packages = () => {
   const [packages, setPackages] = useState([
     {
       id: 1,
-      name: 'Elevare Start',
-      description: 'Pacote ideal para empresas que estão começando no digital',
-      price: 'R$ 0,00',
+      name: 'Plano Profissional',
+      description: 'Este pacote é focado em manter o perfil da marca sempre atualizado, dinâmico e com presença digital forte.',
+      price: 'R$ 800,00 / mês',
       items: [
-        'Gestão de 2 redes sociais',
-        '10 posts por mês',
-        'Relatório mensal',
-        'Suporte via WhatsApp'
+        '8 Reels por mês',
+        'Stories diários',
+        '3 dias de acompanhamento presencial por semana',
+        'Até 15 artes promocionais por mês',
+        'Gestão completa da rede social',
+        'Planejamento estratégico de postagens',
+        'Estratégia básica de engajamento',
+        'Relatório mensal de desempenho'
       ]
     },
     {
       id: 2,
-      name: 'Elevare Pro',
-      description: 'Solução completa para empresas que querem crescer',
-      price: 'R$ 0,00',
+      name: 'Plano Premium',
+      description: 'Um pacote mais robusto, ideal para elevar o nível da marca, com foco em produção profissional e crescimento.',
+      price: 'R$ 1.000,00 / mês',
       items: [
-        'Gestão de 3 redes sociais',
-        '20 posts por mês',
-        '5 stories diários',
-        'Relatório mensal detalhado',
-        'Suporte prioritário',
-        '1 campanha mensal'
+        '12 Reels por mês',
+        'Stories diários',
+        '5 dias de acompanhamento presencial por semana',
+        'Fotos gastronômicas',
+        'Artes ilimitadas',
+        'Gestão de tráfego pago',
+        'Planejamento estratégico avançado',
+        'Otimização de engajamento',
+        'Relatório semanal de desempenho'
       ]
     },
     {
       id: 3,
-      name: 'Elevare Master',
-      description: 'Pacote premium com todas as funcionalidades',
-      price: 'R$ 0,00',
+      name: 'Landing Page (Página de Conversão)',
+      description: 'Ideal para lançamentos, promoções específicas ou cardápio digital simplificado. Página única, carregamento rápido e foco total em levar o cliente para o WhatsApp/iFood.',
+      price: 'R$ 1.200,00',
       items: [
-        'Gestão de 4+ redes sociais',
-        'Posts ilimitados',
-        'Stories diários',
-        'Reels semanais',
-        'Relatório semanal',
-        'Suporte 24/7',
-        '2 campanhas mensais',
-        'Consultoria estratégica mensal'
+        'Página única otimizada',
+        'Carregamento rápido',
+        'Foco em conversão',
+        'Integração com WhatsApp',
+        'Integração com iFood',
+        'Design responsivo',
+        'Pagamento único'
+      ]
+    },
+    {
+      id: 4,
+      name: 'Site para Restaurante / Gastronomia',
+      description: 'Ideal para restaurantes, petiscarias e deliveries que precisam de um cardápio online robusto. Design focado em "apetite appeal" (fotos de comida).',
+      price: 'R$ 2.000,00',
+      items: [
+        'Design focado em "apetite appeal"',
+        'Fotos de comida profissionais',
+        'Integração com botão de pedidos',
+        'Cardápio digital interativo',
+        'Mapa de localização',
+        'Área de reservas',
+        'Design responsivo',
+        'Pagamento único'
+      ]
+    },
+    {
+      id: 5,
+      name: 'Site Institucional Completo',
+      description: 'Ideal para empresas de médio/grande porte que precisam de autoridade corporativa. Estrutura completa com múltiplas páginas, blog e SEO avançado.',
+      price: 'R$ 2.400,00',
+      items: [
+        'Estrutura completa (múltiplas páginas)',
+        'Blog integrado',
+        'Área institucional detalhada',
+        'SEO avançado',
+        'Design corporativo profissional',
+        'Sistema de gestão de conteúdo',
+        'Design responsivo',
+        'Pagamento único'
       ]
     }
   ])

@@ -23,6 +23,44 @@
   box-shadow: 0 4px 12px var(--shadow-hover);
 }
 
+.message-card.highlight {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 2px solid #ff6b35;
+  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+}
+
+.message-card.highlight:hover {
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+  transform: translateY(-2px);
+}
+
+.message-card.highlight .message-title {
+  color: #ff6b35;
+}
+
+.message-card.highlight .message-description {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.message-card.highlight .message-content {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 107, 53, 0.3);
+  color: #ffffff;
+}
+
+.message-card.highlight .message-content:focus {
+  border-color: #ff6b35;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.message-card.highlight .message-character-count {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.message-card.highlight .message-card-header {
+  border-bottom-color: rgba(255, 107, 53, 0.3);
+}
+
 .message-card-header {
   display: flex;
   justify-content: space-between;

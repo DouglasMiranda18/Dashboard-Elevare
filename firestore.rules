@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Função helper para verificar se usuário está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Função helper para verificar se usuário é admin
+    function isAdmin() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Coleção de usuários
+    match /users/{userId} {
+      // Usuários autenticados podem ler todos os usuários (necessário para página de gerenciamento)
+      allow read: if isAuthenticated();
+      
+      // Usuários podem criar seu próprio documento ao se registrar
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      
+      // Usuários podem atualizar seu próprio documento
+      // Admins podem atualizar qualquer documento de usuário
+      allow update: if isAuthenticated() && 
+                       (request.auth.uid == userId || isAdmin());
+      
+      // Apenas admins podem deletar (ou desabilitar completamente)
+      allow delete: if false; // ou: allow delete: if isAdmin();
+    }
+    
+    // Dados do dashboard
+    match /dashboard/{document=**} {
+      // Usuários autenticados podem ler/escrever
+      // (Você pode restringir mais tarde baseado no papel do usuário)
+      allow read, write: if isAuthenticated();
+    }
+  }
+}
+
