@@ -1,0 +1,26 @@
+=== CONFIGURAR GIT (Primeira vez) ===
+
+git config --global user.name "Seu Nome"
+git config --global user.email "seu@email.com"
+
+
+=== FAZER COMMIT INICIAL ===
+
+git commit -m "Initial commit - Dashboard Elevare interno"
+git branch -M main
+
+
+=== CONECTAR AO GITHUB ===
+
+# 1. Criar repositório no GitHub (PRIVADO) primeiro!
+# 2. Depois executar:
+
+git remote add origin https://github.com/SEU_USUARIO/elevare-dashboard.git
+git push -u origin main
+
+
+=== COMANDOS PARA FUTURAS ATUALIZAÇÕES ===
+
+git add .
+git commit -m "Descrição das alterações"
+git push

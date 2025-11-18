@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { storage } from '../utils/localStorage'
+import { useUser } from '../contexts/UserContext'
+import { storage } from '../utils/storage'
 import './Packages.css'
 
 const Packages = () => {
+  const { getUserKey } = useUser()
   const [packages, setPackages] = useState([
     {
       id: 1,
@@ -49,15 +51,36 @@ const Packages = () => {
   ])
 
   useEffect(() => {
-    const saved = storage.get('packages', null)
-    if (saved) {
-      setPackages(saved)
+    const loadPackages = async () => {
+      const saved = await storage.get(getUserKey('packages'), null)
+      if (saved) {
+        setPackages(saved)
+      }
     }
-  }, [])
+    loadPackages()
+
+    // Observar mudanças em tempo real (Firebase)
+    const unsubscribe = storage.subscribe(
+      getUserKey('packages'),
+      (data) => {
+        if (data) {
+          setPackages(data)
+        }
+      },
+      packages
+    )
+
+    return () => {
+      if (unsubscribe) unsubscribe()
+    }
+  }, [getUserKey])
 
   useEffect(() => {
-    storage.set('packages', packages)
-  }, [packages])
+    const savePackages = async () => {
+      await storage.set(getUserKey('packages'), packages)
+    }
+    savePackages()
+  }, [packages, getUserKey])
 
   const handleChange = (id, field, value) => {
     setPackages(prev => prev.map(pkg => 

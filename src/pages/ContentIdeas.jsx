@@ -1,20 +1,45 @@
 import React, { useState, useEffect } from 'react'
-import { storage } from '../utils/localStorage'
+import { useUser } from '../contexts/UserContext'
+import { storage } from '../utils/storage'
 import './ContentIdeas.css'
 
 const ContentIdeas = () => {
+  const { getUserKey } = useUser()
   const [ideas, setIdeas] = useState([])
 
   useEffect(() => {
-    const saved = storage.get('contentIdeas', [])
-    if (saved && saved.length > 0) {
-      setIdeas(saved)
+    const loadIdeas = async () => {
+      const saved = await storage.get(getUserKey('contentIdeas'), [])
+      if (saved && saved.length > 0) {
+        setIdeas(saved)
+      }
     }
-  }, [])
+    loadIdeas()
+
+    // Observar mudanças em tempo real (Firebase)
+    const unsubscribe = storage.subscribe(
+      getUserKey('contentIdeas'),
+      (data) => {
+        if (data && data.length > 0) {
+          setIdeas(data)
+        } else if (Array.isArray(data)) {
+          setIdeas(data)
+        }
+      },
+      []
+    )
+
+    return () => {
+      if (unsubscribe) unsubscribe()
+    }
+  }, [getUserKey])
 
   useEffect(() => {
-    storage.set('contentIdeas', ideas)
-  }, [ideas])
+    const saveIdeas = async () => {
+      await storage.set(getUserKey('contentIdeas'), ideas)
+    }
+    saveIdeas()
+  }, [ideas, getUserKey])
 
   const [showModal, setShowModal] = useState(false)
   const [editingIdea, setEditingIdea] = useState(null)

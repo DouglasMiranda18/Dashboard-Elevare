@@ -3,6 +3,176 @@
   margin: 0 auto;
 }
 
+.revenue-section {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px var(--shadow);
+  margin-bottom: 2rem;
+}
+
+.revenue-header {
+  margin-bottom: 1.5rem;
+}
+
+.revenue-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.month-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background: var(--cream);
+  border-radius: 8px;
+}
+
+.month-display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 200px;
+  justify-content: center;
+}
+
+.month-picker {
+  padding: 0.5rem;
+  border: 2px solid var(--primary);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-dark);
+  transition: border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.month-picker:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(85, 174, 190, 0.2);
+}
+
+.month-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.btn-month-nav,
+.btn-today-month {
+  padding: 0.75rem 1.5rem;
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-month-nav:hover,
+.btn-today-month:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.btn-today-month {
+  background: var(--brown);
+}
+
+.btn-today-month:hover {
+  background: var(--brown);
+  opacity: 0.9;
+}
+
+.revenue-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.revenue-card {
+  background: linear-gradient(135deg, var(--cream) 0%, var(--tan) 100%);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.revenue-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px var(--shadow-hover);
+}
+
+.revenue-monthly {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+}
+
+.revenue-sites {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+}
+
+.revenue-total {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: var(--white);
+}
+
+.revenue-icon {
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+
+.revenue-content {
+  flex: 1;
+}
+
+.revenue-content h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: var(--text-dark);
+  opacity: 0.8;
+}
+
+.revenue-total .revenue-content h3 {
+  color: var(--white);
+  opacity: 0.9;
+}
+
+.revenue-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin: 0.5rem 0;
+  display: block;
+}
+
+.revenue-total-value {
+  color: var(--white);
+  font-size: 2rem;
+}
+
+.revenue-count {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin: 0;
+}
+
+.revenue-total .revenue-count {
+  color: rgba(255, 255, 255, 0.9);
+}
+
 .clients-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -37,13 +207,22 @@
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--primary-dark);
-  margin: 0 0 0.25rem 0;
+  margin: 0;
+}
+
+.client-type-badge {
+  padding: 0.25rem 0.75rem;
+  background: var(--cream);
+  color: var(--text-dark);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .client-company {
   font-size: 0.9rem;
   color: var(--text-light);
-  margin: 0;
+  margin: 0.5rem 0 0 0;
 }
 
 .client-status {
@@ -53,6 +232,54 @@
   font-weight: 600;
   border: 1px solid;
   white-space: nowrap;
+}
+
+.client-revenue {
+  background: linear-gradient(135deg, var(--primary)10 0%, var(--primary-dark)10 100%);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid var(--primary);
+  gap: 0.5rem;
+}
+
+.revenue-label {
+  font-weight: 600;
+  color: var(--primary-dark);
+  font-size: 0.95rem;
+  flex: 1;
+}
+
+.revenue-amount {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.btn-edit-revenue {
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.btn-edit-revenue:hover {
+  background: var(--primary-dark);
+  transform: scale(1.1);
 }
 
 .client-info {
@@ -101,8 +328,95 @@
   border-top: 1px solid var(--cream);
 }
 
+.modal-revenue {
+  max-width: 600px;
+}
+
+.revenue-history {
+  max-height: 500px;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+
+.revenue-month-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  background: var(--cream);
+  border-radius: 8px;
+  gap: 1rem;
+}
+
+.revenue-month-item label {
+  font-weight: 600;
+  color: var(--text-dark);
+  min-width: 150px;
+  font-size: 0.95rem;
+}
+
+.revenue-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 2px solid var(--primary);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.revenue-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(85, 174, 190, 0.2);
+}
+
 @media (max-width: 768px) {
+  .month-selector {
+    flex-direction: column;
+  }
+
+  .month-display {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn-month-nav,
+  .btn-today-month {
+    width: 100%;
+  }
+
+  .revenue-cards {
+    grid-template-columns: 1fr;
+  }
+
   .clients-grid {
     grid-template-columns: 1fr;
+  }
+
+  .revenue-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .revenue-icon {
+    font-size: 2.5rem;
+  }
+
+  .client-revenue {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .revenue-month-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .revenue-month-item label {
+    min-width: auto;
+  }
+
+  .revenue-input {
+    width: 100%;
   }
 }

@@ -254,3 +254,46 @@ textarea.editable {
   justify-content: flex-end;
   margin-top: 2rem;
 }
+
+.access-denied {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.access-denied-content {
+  text-align: center;
+  background: var(--white);
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px var(--shadow);
+  max-width: 500px;
+}
+
+.access-denied-content h1 {
+  font-size: 2rem;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+}
+
+.access-denied-content p {
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.app-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-light);
+}
+
+.loading-content {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 1.1rem;
+}

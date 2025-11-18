@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { storage } from '../utils/localStorage'
+import { useUser } from '../contexts/UserContext'
+import { storage } from '../utils/storage'
 import './Checklists.css'
 
 const Checklists = () => {
+  const { getUserKey } = useUser()
   const [checklists, setChecklists] = useState({
     monthly: {
       title: 'Checklist Mensal',
@@ -43,15 +45,36 @@ const Checklists = () => {
   })
 
   useEffect(() => {
-    const saved = storage.get('checklists', null)
-    if (saved) {
-      setChecklists(saved)
+    const loadChecklists = async () => {
+      const saved = await storage.get(getUserKey('checklists'), null)
+      if (saved) {
+        setChecklists(saved)
+      }
     }
-  }, [])
+    loadChecklists()
+
+    // Observar mudanças em tempo real (Firebase)
+    const unsubscribe = storage.subscribe(
+      getUserKey('checklists'),
+      (data) => {
+        if (data) {
+          setChecklists(data)
+        }
+      },
+      checklists
+    )
+
+    return () => {
+      if (unsubscribe) unsubscribe()
+    }
+  }, [getUserKey])
 
   useEffect(() => {
-    storage.set('checklists', checklists)
-  }, [checklists])
+    const saveChecklists = async () => {
+      await storage.set(getUserKey('checklists'), checklists)
+    }
+    saveChecklists()
+  }, [checklists, getUserKey])
 
   const toggleItem = (checklistKey, itemId) => {
     setChecklists(prev => ({

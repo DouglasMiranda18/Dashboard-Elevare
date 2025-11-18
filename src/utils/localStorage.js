@@ -24,5 +24,14 @@ export const storage = {
     } catch (error) {
       console.error(`Erro ao remover ${key} do localStorage:`, error)
     }
+  },
+
+  // Método para usar com contexto de usuário
+  getUserData: (userKey, defaultValue = null) => {
+    return storage.get(userKey, defaultValue)
+  },
+
+  setUserData: (userKey, value) => {
+    storage.set(userKey, value)
   }
 }

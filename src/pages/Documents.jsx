@@ -1,20 +1,45 @@
 import React, { useState, useEffect } from 'react'
-import { storage } from '../utils/localStorage'
+import { useUser } from '../contexts/UserContext'
+import { storage } from '../utils/storage'
 import './Documents.css'
 
 const Documents = () => {
+  const { getUserKey } = useUser()
   const [documents, setDocuments] = useState([])
 
   useEffect(() => {
-    const saved = storage.get('documents', [])
-    if (saved && saved.length > 0) {
-      setDocuments(saved)
+    const loadDocuments = async () => {
+      const saved = await storage.get(getUserKey('documents'), [])
+      if (saved && saved.length > 0) {
+        setDocuments(saved)
+      }
     }
-  }, [])
+    loadDocuments()
+
+    // Observar mudanças em tempo real (Firebase)
+    const unsubscribe = storage.subscribe(
+      getUserKey('documents'),
+      (data) => {
+        if (data && data.length > 0) {
+          setDocuments(data)
+        } else if (Array.isArray(data)) {
+          setDocuments(data)
+        }
+      },
+      []
+    )
+
+    return () => {
+      if (unsubscribe) unsubscribe()
+    }
+  }, [getUserKey])
 
   useEffect(() => {
-    storage.set('documents', documents)
-  }, [documents])
+    const saveDocuments = async () => {
+      await storage.set(getUserKey('documents'), documents)
+    }
+    saveDocuments()
+  }, [documents, getUserKey])
 
   const [showModal, setShowModal] = useState(false)
   const [editingDoc, setEditingDoc] = useState(null)

@@ -1,0 +1,127 @@
+.users-page {
+  padding: 0;
+}
+
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.user-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.user-card:hover {
+  box-shadow: 0 4px 12px var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--cream);
+}
+
+.user-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.user-email {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.user-date {
+  color: var(--text-light);
+  font-size: 0.85rem;
+}
+
+.role-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.role-admin {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  color: #2e7d32;
+}
+
+.role-affiliate {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  color: #1565c0;
+}
+
+.user-permissions {
+  margin-bottom: 1rem;
+}
+
+.user-permissions h4 {
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.permissions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.permission-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--cream);
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.permission-item.all-permissions {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.permission-item.no-permissions {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.user-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cream);
+}
+
+.disabled-input {
+  background: var(--cream);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .users-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

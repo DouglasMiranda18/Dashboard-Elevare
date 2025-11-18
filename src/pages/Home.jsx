@@ -8,7 +8,7 @@ const Home = () => {
     { path: '/messages', label: 'Mensagens Prontas', icon: '💬', color: 'var(--primary-dark)' },
     { path: '/packages', label: 'Pacotes', icon: '📦', color: 'var(--brown)' },
     { path: '/content-ideas', label: 'Ideias de Conteúdo', icon: '💡', color: 'var(--primary)' },
-    { path: '/clients', label: 'Clientes', icon: '👥', color: 'var(--primary-dark)' },
+    { path: '/clients', label: 'Clientes e Sites', icon: '👥', color: 'var(--primary-dark)' },
     { path: '/checklists', label: 'Checklists', icon: '✅', color: 'var(--brown)' },
   ]
 

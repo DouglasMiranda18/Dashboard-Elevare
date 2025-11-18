@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { storage } from '../utils/localStorage'
+import { useUser } from '../contexts/UserContext'
+import { storage } from '../utils/storage'
 import './Messages.css'
 
 const Messages = () => {
+  const { getUserKey } = useUser()
   const [messages, setMessages] = useState({
     whatsappProspecting: 'Olá! Vi que você tem um negócio incrível e gostaria de conversar sobre como podemos ajudar você a alcançar resultados ainda melhores nas redes sociais. Tem um minuto para conversarmos?',
     instagramDM: 'Oi! Adorei seu perfil! Vejo que você está investindo bastante nas redes sociais. Que tal conversarmos sobre como potencializar ainda mais seus resultados?',
@@ -12,15 +14,36 @@ const Messages = () => {
   })
 
   useEffect(() => {
-    const saved = storage.get('messages', null)
-    if (saved) {
-      setMessages(saved)
+    const loadMessages = async () => {
+      const saved = await storage.get(getUserKey('messages'), null)
+      if (saved) {
+        setMessages(saved)
+      }
     }
-  }, [])
+    loadMessages()
+
+    // Observar mudanças em tempo real (Firebase)
+    const unsubscribe = storage.subscribe(
+      getUserKey('messages'),
+      (data) => {
+        if (data) {
+          setMessages(data)
+        }
+      },
+      messages
+    )
+
+    return () => {
+      if (unsubscribe) unsubscribe()
+    }
+  }, [getUserKey])
 
   useEffect(() => {
-    storage.set('messages', messages)
-  }, [messages])
+    const saveMessages = async () => {
+      await storage.set(getUserKey('messages'), messages)
+    }
+    saveMessages()
+  }, [messages, getUserKey])
 
   const handleChange = (key, value) => {
     setMessages(prev => ({

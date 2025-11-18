@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { storage } from '../utils/localStorage'
+import { useUser } from '../contexts/UserContext'
+import { storage } from '../utils/storage'
 import './SocialMediaPlanning.css'
 
 const SocialMediaPlanning = () => {
+  const { getUserKey } = useUser()
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
   const [tasks, setTasks] = useState({})
 
@@ -13,31 +15,66 @@ const SocialMediaPlanning = () => {
   ]
 
   useEffect(() => {
-    const saved = storage.get('dailyAgenda', {})
-    if (saved) {
-      // Migrar tarefas antigas que usavam 'completed' boolean
-      const migratedTasks = {}
-      Object.keys(saved).forEach(date => {
-        migratedTasks[date] = saved[date].map(task => {
-          if (task.status) {
-            return task // Já tem status
-          }
-          // Migrar de completed (boolean) para status
-          return {
-            ...task,
-            status: task.completed ? 'completed' : 'not-done',
-            completed: undefined // Remover propriedade antiga
-          }
-        })
-      })
-      setTasks(migratedTasks)
-      storage.set('dailyAgenda', migratedTasks)
+    const loadTasks = async () => {
+      const saved = await storage.get(getUserKey('dailyAgenda'), {})
+      if (saved && Object.keys(saved).length > 0) {
+        // Migrar tarefas antigas que usavam 'completed' boolean
+        const needsMigration = Object.values(saved).some(dateTasks => 
+          Array.isArray(dateTasks) && dateTasks.some(task => task.hasOwnProperty('completed') && !task.status)
+        )
+        
+        if (needsMigration) {
+          const migratedTasks = {}
+          Object.keys(saved).forEach(date => {
+            if (Array.isArray(saved[date])) {
+              migratedTasks[date] = saved[date].map(task => {
+                if (task.status) {
+                  return task // Já tem status
+                }
+                // Migrar de completed (boolean) para status
+                return {
+                  ...task,
+                  status: task.completed ? 'completed' : 'not-done',
+                  completed: undefined // Remover propriedade antiga
+                }
+              })
+            } else {
+              migratedTasks[date] = saved[date]
+            }
+          })
+          setTasks(migratedTasks)
+          await storage.set(getUserKey('dailyAgenda'), migratedTasks)
+        } else {
+          setTasks(saved)
+        }
+      }
     }
-  }, [])
+    loadTasks()
+
+    // Observar mudanças em tempo real (Firebase)
+    const unsubscribe = storage.subscribe(
+      getUserKey('dailyAgenda'),
+      (data) => {
+        if (data) {
+          setTasks(data)
+        }
+      },
+      {}
+    )
+
+    return () => {
+      if (unsubscribe) unsubscribe()
+    }
+  }, [getUserKey])
 
   useEffect(() => {
-    storage.set('dailyAgenda', tasks)
-  }, [tasks])
+    const saveTasks = async () => {
+      if (Object.keys(tasks).length > 0) {
+        await storage.set(getUserKey('dailyAgenda'), tasks)
+      }
+    }
+    saveTasks()
+  }, [tasks, getUserKey])
 
   const getTasksForDate = (date) => {
     return tasks[date] || []
