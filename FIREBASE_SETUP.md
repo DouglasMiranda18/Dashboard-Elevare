@@ -58,21 +58,99 @@ Vá em **Regras** do Firestore e configure:
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Permitir leitura/escrita para dashboard
+    // Função helper para verificar se usuário está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Coleção de usuários
+    match /users/{userId} {
+      // Usuários autenticados podem ler todos os usuários (necessário para página de gerenciamento)
+      // Em produção, você pode restringir isso apenas para admins
+      allow read: if isAuthenticated();
+      // Usuários podem criar seu próprio documento ao se registrar
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      // Usuários podem atualizar seu próprio documento
+      allow update: if isAuthenticated() && request.auth.uid == userId;
+      // Ninguém pode deletar (ou apenas admins - configure conforme necessário)
+      allow delete: if false;
+    }
+    
+    // Dados do dashboard
     match /dashboard/{document=**} {
-      allow read, write: if true;
+      // Usuários autenticados podem ler/escrever
+      // (Você pode restringir mais tarde baseado no papel do usuário)
+      allow read, write: if isAuthenticated();
     }
   }
 }
 ```
 
-**⚠️ ATENÇÃO**: As regras acima permitem acesso público. Para produção, configure autenticação adequada.
+**Para regras mais restritivas (recomendado para produção):**
 
-### Passo 4: Testar
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Coleção de usuários
+    match /users/{userId} {
+      // Usuários autenticados podem ler todos os usuários
+      allow read: if isAuthenticated();
+      // Usuários podem criar seu próprio documento
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      // Usuários podem atualizar seu próprio documento
+      allow update: if isAuthenticated() && request.auth.uid == userId;
+      // Ninguém pode deletar
+      allow delete: if false;
+    }
+    
+    // Dados do dashboard - acesso baseado em autenticação
+    match /dashboard/{document=**} {
+      allow read, write: if isAuthenticated();
+    }
+  }
+}
+```
+
+**⚠️ IMPORTANTE**: 
+- Essas regras requerem autenticação
+- Usuários autenticados podem ler todos os usuários (para a página de gerenciamento)
+- Usuários só podem criar/atualizar seus próprios dados
+- Após configurar, publique as regras clicando em **Publicar**
+
+### Passo 4: Configurar Domínios Autorizados (OAuth)
+
+Para que a autenticação funcione no domínio de produção:
+
+1. Acesse [Firebase Console](https://console.firebase.google.com)
+2. Selecione o projeto `elevare-981b1`
+3. Vá em **Authentication** > **Settings** > **Authorized domains**
+4. Clique em **Add domain**
+5. Adicione o domínio: `dashboardelevare.netlify.app`
+6. Clique em **Add**
+
+**Domínios já autorizados por padrão:**
+- `localhost` (desenvolvimento local)
+- `elevare-981b1.firebaseapp.com` (Firebase Hosting)
+
+### Passo 5: Habilitar Autenticação por Email/Senha
+
+1. No Firebase Console, vá em **Authentication**
+2. Clique em **Get started** (se ainda não habilitou)
+3. Vá na aba **Sign-in method**
+4. Clique em **Email/Password**
+5. Ative a opção **Enable**
+6. Clique em **Save**
+
+### Passo 6: Testar
 
 1. Execute `npm run dev`
 2. Acesse o dashboard
-3. Adicione algum dado
+3. Tente fazer login ou criar uma conta
 4. Verifique no Firebase Console se os dados foram salvos
 
 ## 📊 Estrutura dos Dados

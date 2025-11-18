@@ -47,6 +47,21 @@
   outline: none;
 }
 
+/* Estilos para visualização apenas (afiliados) */
+.package-name:not(.editable),
+.package-price:not(input),
+.package-description:not(textarea) {
+  display: block;
+  margin: 0;
+}
+
+.package-item-text {
+  display: block;
+  padding: 0.5rem;
+  color: var(--text-dark);
+  flex: 1;
+}
+
 .package-price {
   font-size: 1.5rem;
   font-weight: 600;

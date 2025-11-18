@@ -98,12 +98,18 @@ const Users = () => {
     }))
   }
 
-  const getRoleBadge = (role) => {
-    if (role === 'admin') {
+  const getRoleBadge = (user) => {
+    if (user.role === 'admin') {
       return <span className="role-badge role-admin">👑 Admin</span>
+    }
+    if (user.pending) {
+      return <span className="role-badge role-pending">⏳ Pendente</span>
     }
     return <span className="role-badge role-affiliate">🤝 Afiliado</span>
   }
+
+  // Filtrar usuários (excluir deletados)
+  const activeUsers = allFirebaseUsers.filter(u => !u.deleted)
 
   if (loading) {
     return (
@@ -140,7 +146,7 @@ const Users = () => {
         </ul>
       </div>
 
-      {allFirebaseUsers.length === 0 ? (
+      {activeUsers.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">👥</div>
           <h3>Nenhum usuário cadastrado</h3>
@@ -148,7 +154,7 @@ const Users = () => {
         </div>
       ) : (
         <div className="users-grid">
-          {allFirebaseUsers.map((user) => (
+          {activeUsers.map((user) => (
             <div key={user.id} className="user-card">
               <div className="user-header">
                 <div>
@@ -161,8 +167,13 @@ const Users = () => {
                       Criado em: {new Date(user.createdAt).toLocaleDateString('pt-BR')}
                     </p>
                   )}
+                  {user.pending && (
+                    <p className="user-pending-notice">
+                      ⚠️ Aguardando registro do usuário
+                    </p>
+                  )}
                 </div>
-                {getRoleBadge(user.role)}
+                {getRoleBadge(user)}
               </div>
 
               <div className="user-permissions">

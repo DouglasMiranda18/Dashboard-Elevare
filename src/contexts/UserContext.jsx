@@ -5,7 +5,7 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged
 } from 'firebase/auth'
-import { doc, getDoc, setDoc, collection, getDocs, query, orderBy, updateDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc, collection, getDocs, query, orderBy, updateDoc, deleteDoc } from 'firebase/firestore'
 import { auth, db } from '../config/firebase'
 import { storage } from '../utils/storage'
 
@@ -67,18 +67,47 @@ export const UserProvider = ({ children }) => {
             setCurrentUser(userData)
             localStorage.setItem('currentUser', JSON.stringify(userData))
           } else {
-            // Se não existe documento, verificar se é o primeiro usuário
+            // Se não existe documento, verificar se existe documento pendente com este email
             const existingUsers = await fetchAllUsers()
-            const isFirstUser = existingUsers.length === 0
+            const pendingUser = existingUsers.find(u => u.email === firebaseUser.email && u.pending)
+            const isFirstUser = existingUsers.filter(u => !u.pending && !u.deleted).length === 0
             
-            const newUserData = {
-              id: firebaseUser.uid,
-              email: firebaseUser.email,
-              name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Usuário',
-              role: isFirstUser ? 'admin' : 'affiliate',
-              permissions: isFirstUser ? ['all'] : [],
-              createdAt: new Date().toISOString()
+            let newUserData
+            if (pendingUser) {
+              // Deletar documento pendente
+              if (pendingUser.id.startsWith('pending_')) {
+                try {
+                  await deleteDoc(doc(db, 'users', pendingUser.id))
+                } catch (error) {
+                  console.error('Erro ao deletar documento pendente:', error)
+                }
+              }
+              
+              // Criar documento com permissões do pendente
+              newUserData = {
+                id: firebaseUser.uid,
+                email: firebaseUser.email,
+                name: firebaseUser.displayName || pendingUser.name || firebaseUser.email?.split('@')[0] || 'Usuário',
+                role: 'affiliate',
+                permissions: pendingUser.permissions || [],
+                phone: pendingUser.phone || '',
+                createdAt: pendingUser.createdAt || new Date().toISOString()
+              }
+            } else {
+              // Criar novo usuário
+              // Permissões padrão para novos afiliados
+              const defaultAffiliatePermissions = ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients']
+              
+              newUserData = {
+                id: firebaseUser.uid,
+                email: firebaseUser.email,
+                name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Usuário',
+                role: isFirstUser ? 'admin' : 'affiliate',
+                permissions: isFirstUser ? ['all'] : defaultAffiliatePermissions,
+                createdAt: new Date().toISOString()
+              }
             }
+            
             await setDoc(doc(db, 'users', firebaseUser.uid), newUserData)
             setCurrentUser(newUserData)
             localStorage.setItem('currentUser', JSON.stringify(newUserData))
@@ -245,17 +274,42 @@ export const UserProvider = ({ children }) => {
       const existingUsers = await fetchAllUsers()
       const isFirstUser = existingUsers.length === 0
 
+      // Verificar se existe um documento pendente com este email
+      const pendingUser = existingUsers.find(u => u.email === email && u.pending)
+      
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
       const firebaseUser = userCredential.user
 
-      // Criar documento do usuário no Firestore
-      const userData = {
-        id: firebaseUser.uid,
-        email: firebaseUser.email,
-        name: name || firebaseUser.email?.split('@')[0] || 'Usuário',
-        role: isFirstUser ? 'admin' : 'affiliate', // Primeiro usuário é admin, demais são afiliados
-        permissions: isFirstUser ? ['all'] : [],
-        createdAt: new Date().toISOString()
+      // Se existe documento pendente, usar as permissões dele
+      let userData
+      if (pendingUser) {
+        // Deletar documento pendente
+        if (pendingUser.id.startsWith('pending_')) {
+          await deleteDoc(doc(db, 'users', pendingUser.id))
+        }
+        
+        userData = {
+          id: firebaseUser.uid,
+          email: firebaseUser.email,
+          name: name || pendingUser.name || firebaseUser.email?.split('@')[0] || 'Usuário',
+          role: 'affiliate',
+          permissions: pendingUser.permissions || [],
+          phone: pendingUser.phone || '',
+          createdAt: pendingUser.createdAt || new Date().toISOString()
+        }
+      } else {
+        // Criar novo documento do usuário no Firestore
+        // Permissões padrão para novos afiliados
+        const defaultAffiliatePermissions = ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients']
+        
+        userData = {
+          id: firebaseUser.uid,
+          email: firebaseUser.email,
+          name: name || firebaseUser.email?.split('@')[0] || 'Usuário',
+          role: isFirstUser ? 'admin' : 'affiliate', // Primeiro usuário é admin, demais são afiliados
+          permissions: isFirstUser ? ['all'] : defaultAffiliatePermissions,
+          createdAt: new Date().toISOString()
+        }
       }
 
       await setDoc(doc(db, 'users', firebaseUser.uid), userData)
@@ -315,25 +369,88 @@ export const UserProvider = ({ children }) => {
     }
   }
 
-  const addAffiliate = (affiliateData) => {
-    const newAffiliate = {
-      id: Date.now(),
-      ...affiliateData,
-      role: 'affiliate',
-      createdAt: new Date().toISOString()
+  // Adicionar ou atualizar afiliado no Firestore
+  const addAffiliate = async (affiliateData) => {
+    try {
+      // Buscar se já existe um usuário com este email
+      const existingUsers = await fetchAllUsers()
+      const existingUser = existingUsers.find(u => u.email === affiliateData.email)
+      
+      if (existingUser) {
+        // Se existe, atualizar permissões
+        await updateUserRole(existingUser.id, 'affiliate', affiliateData.permissions || [])
+        // Atualizar outros dados se necessário
+        const userRef = doc(db, 'users', existingUser.id)
+        await updateDoc(userRef, {
+          name: affiliateData.name || existingUser.name,
+          phone: affiliateData.phone || existingUser.phone,
+          updatedAt: new Date().toISOString()
+        })
+        await fetchAllUsers()
+        return { success: true, user: existingUser }
+      } else {
+        // Se não existe, criar documento pendente no Firestore
+        // Usar email como ID temporário (será substituído quando o usuário se registrar)
+        const tempId = `pending_${Date.now()}_${affiliateData.email.replace(/[^a-zA-Z0-9]/g, '_')}`
+        const pendingUser = {
+          id: tempId,
+          email: affiliateData.email,
+          name: affiliateData.name,
+          phone: affiliateData.phone || '',
+          role: 'affiliate',
+          permissions: affiliateData.permissions || [],
+          pending: true, // Marca como pendente até o usuário se registrar
+          createdAt: new Date().toISOString()
+        }
+        
+        await setDoc(doc(db, 'users', tempId), pendingUser)
+        await fetchAllUsers()
+        return { success: true, user: pendingUser }
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar afiliado:', error)
+      return { success: false, error: error.message }
     }
-    setAffiliates(prev => [...prev, newAffiliate])
-    return newAffiliate
   }
 
-  const updateAffiliate = (id, affiliateData) => {
-    setAffiliates(prev => prev.map(aff => 
-      aff.id === id ? { ...aff, ...affiliateData } : aff
-    ))
+  // Atualizar afiliado no Firestore
+  const updateAffiliate = async (userId, affiliateData) => {
+    try {
+      await updateUserRole(userId, 'affiliate', affiliateData.permissions || [])
+      
+      // Atualizar outros dados
+      const userRef = doc(db, 'users', userId)
+      await updateDoc(userRef, {
+        name: affiliateData.name,
+        phone: affiliateData.phone || '',
+        email: affiliateData.email || '',
+        updatedAt: new Date().toISOString()
+      })
+      
+      await fetchAllUsers()
+      return { success: true }
+    } catch (error) {
+      console.error('Erro ao atualizar afiliado:', error)
+      return { success: false, error: error.message }
+    }
   }
 
-  const deleteAffiliate = (id) => {
-    setAffiliates(prev => prev.filter(aff => aff.id !== id))
+  // Deletar afiliado do Firestore
+  const deleteAffiliate = async (userId) => {
+    try {
+      const userRef = doc(db, 'users', userId)
+      await updateDoc(userRef, {
+        role: 'affiliate',
+        deleted: true,
+        deletedAt: new Date().toISOString()
+      })
+      // Ou deletar completamente: await deleteDoc(userRef)
+      await fetchAllUsers()
+      return { success: true }
+    } catch (error) {
+      console.error('Erro ao deletar afiliado:', error)
+      return { success: false, error: error.message }
+    }
   }
 
   const getUserKey = (key) => {

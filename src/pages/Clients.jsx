@@ -4,7 +4,8 @@ import { storage } from '../utils/storage'
 import './Clients.css'
 
 const Clients = () => {
-  const { getUserKey } = useUser()
+  const { getUserKey, currentUser } = useUser()
+  const isAffiliate = currentUser?.role === 'affiliate'
   const [clients, setClients] = useState([])
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const now = new Date()
@@ -140,21 +141,31 @@ const Clients = () => {
   const calculateRevenue = () => {
     let monthlyRevenue = 0
     let sitesRevenue = 0
+    let totalRevenue = 0 // Renda total para afiliados (clientes + sites)
 
     clients.forEach(item => {
       if (item.type === 'client' && item.status === 'active') {
         const revenue = getClientRevenueForMonth(item, selectedMonth)
         monthlyRevenue += revenue
+        // Para afiliados, somar renda de clientes também
+        if (isAffiliate) {
+          totalRevenue += revenue
+        }
       } else if (item.type === 'site' && item.status === 'active') {
         const value = getSiteValueForMonth(item, selectedMonth)
         sitesRevenue += value
+        // Para afiliados, somar valor dos sites como renda
+        if (isAffiliate) {
+          totalRevenue += value
+        }
       }
     })
 
     return {
       monthlyRevenue,
       sitesRevenue,
-      total: monthlyRevenue + sitesRevenue
+      total: monthlyRevenue + sitesRevenue,
+      totalRevenue // Renda total para afiliados
     }
   }
 
@@ -319,58 +330,99 @@ const Clients = () => {
         </div>
       </div>
 
-      {/* Seção de Acompanhamento de Renda */}
-      <div className="revenue-section">
-        <div className="revenue-header">
-          <h2 className="revenue-title">💰 Acompanhamento de Renda</h2>
-          <div className="month-selector">
-            <button className="btn-month-nav" onClick={() => changeMonth(-1)}>
-              ← Mês Anterior
-            </button>
-            <div className="month-display">
-              <input
-                type="month"
-                value={selectedMonth}
-                onChange={(e) => setSelectedMonth(e.target.value)}
-                className="month-picker"
-              />
-              <span className="month-label">{formatMonth(selectedMonth)}</span>
+      {/* Seção de Acompanhamento de Renda - Apenas para Admins */}
+      {!isAffiliate && (
+        <div className="revenue-section">
+          <div className="revenue-header">
+            <h2 className="revenue-title">💰 Acompanhamento de Renda</h2>
+            <div className="month-selector">
+              <button className="btn-month-nav" onClick={() => changeMonth(-1)}>
+                ← Mês Anterior
+              </button>
+              <div className="month-display">
+                <input
+                  type="month"
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                  className="month-picker"
+                />
+                <span className="month-label">{formatMonth(selectedMonth)}</span>
+              </div>
+              <button className="btn-month-nav" onClick={() => changeMonth(1)}>
+                Próximo Mês →
+              </button>
+              <button className="btn-today-month" onClick={goToCurrentMonth}>
+                Hoje
+              </button>
             </div>
-            <button className="btn-month-nav" onClick={() => changeMonth(1)}>
-              Próximo Mês →
-            </button>
-            <button className="btn-today-month" onClick={goToCurrentMonth}>
-              Hoje
-            </button>
+          </div>
+          <div className="revenue-cards">
+            <div className="revenue-card revenue-monthly">
+              <div className="revenue-icon">👥</div>
+              <div className="revenue-content">
+                <h3>Renda Mensal (Clientes)</h3>
+                <p className="revenue-value">{formatCurrency(revenue.monthlyRevenue)}</p>
+                <p className="revenue-count">{activeClients} cliente{activeClients !== 1 ? 's' : ''} ativo{activeClients !== 1 ? 's' : ''}</p>
+              </div>
+            </div>
+            <div className="revenue-card revenue-sites">
+              <div className="revenue-icon">🌐</div>
+              <div className="revenue-content">
+                <h3>Total Sites Vendidos</h3>
+                <p className="revenue-value">{formatCurrency(revenue.sitesRevenue)}</p>
+                <p className="revenue-count">{activeSites} site{activeSites !== 1 ? 's' : ''} ativo{activeSites !== 1 ? 's' : ''}</p>
+              </div>
+            </div>
+            <div className="revenue-card revenue-total">
+              <div className="revenue-icon">💵</div>
+              <div className="revenue-content">
+                <h3>Total Geral</h3>
+                <p className="revenue-value revenue-total-value">{formatCurrency(revenue.total)}</p>
+                <p className="revenue-count">Renda mensal + Sites</p>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="revenue-cards">
-          <div className="revenue-card revenue-monthly">
-            <div className="revenue-icon">👥</div>
-            <div className="revenue-content">
-              <h3>Renda Mensal (Clientes)</h3>
-              <p className="revenue-value">{formatCurrency(revenue.monthlyRevenue)}</p>
-              <p className="revenue-count">{activeClients} cliente{activeClients !== 1 ? 's' : ''} ativo{activeClients !== 1 ? 's' : ''}</p>
+      )}
+
+      {/* Seção de Renda - Apenas para Afiliados */}
+      {isAffiliate && (
+        <div className="revenue-section commission-section">
+          <div className="revenue-header">
+            <h2 className="revenue-title">💰 Minha Renda</h2>
+            <div className="month-selector">
+              <button className="btn-month-nav" onClick={() => changeMonth(-1)}>
+                ← Mês Anterior
+              </button>
+              <div className="month-display">
+                <input
+                  type="month"
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                  className="month-picker"
+                />
+                <span className="month-label">{formatMonth(selectedMonth)}</span>
+              </div>
+              <button className="btn-month-nav" onClick={() => changeMonth(1)}>
+                Próximo Mês →
+              </button>
+              <button className="btn-today-month" onClick={goToCurrentMonth}>
+                Hoje
+              </button>
             </div>
           </div>
-          <div className="revenue-card revenue-sites">
-            <div className="revenue-icon">🌐</div>
-            <div className="revenue-content">
-              <h3>Total Sites Vendidos</h3>
-              <p className="revenue-value">{formatCurrency(revenue.sitesRevenue)}</p>
-              <p className="revenue-count">{activeSites} site{activeSites !== 1 ? 's' : ''} ativo{activeSites !== 1 ? 's' : ''}</p>
-            </div>
-          </div>
-          <div className="revenue-card revenue-total">
-            <div className="revenue-icon">💵</div>
-            <div className="revenue-content">
-              <h3>Total Geral</h3>
-              <p className="revenue-value revenue-total-value">{formatCurrency(revenue.total)}</p>
-              <p className="revenue-count">Renda mensal + Sites</p>
+          <div className="revenue-cards">
+            <div className="revenue-card revenue-commission">
+              <div className="revenue-icon">💵</div>
+              <div className="revenue-content">
+                <h3>Renda Total ({formatMonth(selectedMonth)})</h3>
+                <p className="revenue-value revenue-commission-value">{formatCurrency(revenue.totalRevenue)}</p>
+                <p className="revenue-count">Renda de clientes e sites que você adicionou</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {clients.length === 0 ? (
         <div className="empty-state">
@@ -410,8 +462,8 @@ const Clients = () => {
                   </span>
                 </div>
 
-                {/* Mostrar valor baseado no tipo */}
-                {client.type === 'client' && (
+                {/* Mostrar valor baseado no tipo - Apenas para Admins */}
+                {!isAffiliate && client.type === 'client' && (
                   <div className="client-revenue">
                     <span className="revenue-label">💰 Renda Mensal ({formatMonth(selectedMonth)}):</span>
                     <span className="revenue-amount">{formatCurrency(currentRevenue)}</span>
@@ -424,7 +476,7 @@ const Clients = () => {
                     </button>
                   </div>
                 )}
-                {client.type === 'site' && (
+                {!isAffiliate && client.type === 'site' && (
                   <div className="client-revenue">
                     <span className="revenue-label">💵 Valor do Site ({formatMonth(selectedMonth)}):</span>
                     <span className="revenue-amount">{formatCurrency(currentSiteValue)}</span>
@@ -435,6 +487,19 @@ const Clients = () => {
                     >
                       ✏️
                     </button>
+                  </div>
+                )}
+                {/* Mostrar renda para afiliados */}
+                {isAffiliate && client.type === 'client' && (
+                  <div className="client-revenue client-commission">
+                    <span className="revenue-label">💰 Renda Mensal ({formatMonth(selectedMonth)}):</span>
+                    <span className="revenue-amount commission-amount">{formatCurrency(currentRevenue)}</span>
+                  </div>
+                )}
+                {isAffiliate && client.type === 'site' && (
+                  <div className="client-revenue client-commission">
+                    <span className="revenue-label">💵 Valor do Site ({formatMonth(selectedMonth)}):</span>
+                    <span className="revenue-amount commission-amount">{formatCurrency(currentSiteValue)}</span>
                   </div>
                 )}
 

@@ -3,15 +3,21 @@ import { useUser } from '../contexts/UserContext'
 import './Affiliates.css'
 
 const Affiliates = () => {
-  const { affiliates, addAffiliate, updateAffiliate, deleteAffiliate, canAccessPage } = useUser()
+  const { allFirebaseUsers, addAffiliate, updateAffiliate, deleteAffiliate, fetchAllUsers } = useUser()
   const [showModal, setShowModal] = useState(false)
   const [editingAffiliate, setEditingAffiliate] = useState(null)
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     permissions: []
   })
+
+  // Filtrar apenas afiliados (excluir pendentes deletados)
+  const affiliates = allFirebaseUsers.filter(u => 
+    u.role === 'affiliate' && !u.deleted
+  )
 
   const availablePages = [
     { key: 'home', label: 'Página Inicial', icon: '🏠' },
@@ -24,7 +30,10 @@ const Affiliates = () => {
     { key: 'documents', label: 'Documentos', icon: '📄' }
   ]
 
-  const openModal = (affiliate = null) => {
+  const openModal = async (affiliate = null) => {
+    // Atualizar lista de usuários antes de abrir modal
+    await fetchAllUsers()
+    
     if (affiliate) {
       setEditingAffiliate(affiliate.id)
       setFormData({
@@ -39,7 +48,7 @@ const Affiliates = () => {
         name: '',
         email: '',
         phone: '',
-        permissions: []
+        permissions: ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients'] // Permissões padrão
       })
     }
     setShowModal(true)
@@ -52,18 +61,33 @@ const Affiliates = () => {
       name: '',
       email: '',
       phone: '',
-      permissions: []
+      permissions: ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients'] // Permissões padrão
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (editingAffiliate) {
-      updateAffiliate(editingAffiliate, formData)
-    } else {
-      addAffiliate(formData)
+    setLoading(true)
+    try {
+      if (editingAffiliate) {
+        const result = await updateAffiliate(editingAffiliate, formData)
+        if (!result.success) {
+          alert('Erro ao atualizar afiliado: ' + result.error)
+        }
+      } else {
+        const result = await addAffiliate(formData)
+        if (!result.success) {
+          alert('Erro ao adicionar afiliado: ' + result.error)
+        }
+      }
+      await fetchAllUsers()
+      closeModal()
+    } catch (error) {
+      console.error('Erro:', error)
+      alert('Erro ao salvar afiliado')
+    } finally {
+      setLoading(false)
     }
-    closeModal()
   }
 
   const togglePermission = (pageKey) => {
@@ -91,9 +115,22 @@ const Affiliates = () => {
     }))
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Tem certeza que deseja excluir este afiliado?')) {
-      deleteAffiliate(id)
+      setLoading(true)
+      try {
+        const result = await deleteAffiliate(id)
+        if (result.success) {
+          await fetchAllUsers()
+        } else {
+          alert('Erro ao excluir afiliado: ' + result.error)
+        }
+      } catch (error) {
+        console.error('Erro:', error)
+        alert('Erro ao excluir afiliado')
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
@@ -117,6 +154,7 @@ const Affiliates = () => {
           <li><strong>Admin/Sócio:</strong> Têm acesso completo a todos os dados compartilhados</li>
           <li><strong>Afiliados:</strong> Têm acesso limitado apenas às páginas que você permitir</li>
           <li><strong>Dados:</strong> Admins e Sócios compartilham os mesmos dados. Afiliados têm dados separados</li>
+          <li><strong>Registro:</strong> Quando você adiciona um afiliado, ele precisa se registrar com o email informado para ativar a conta</li>
         </ul>
       </div>
 
@@ -142,8 +180,15 @@ const Affiliates = () => {
                   {affiliate.phone && (
                     <p className="affiliate-phone">{affiliate.phone}</p>
                   )}
+                  {affiliate.pending && (
+                    <p className="affiliate-pending-notice">
+                      ⏳ Aguardando registro
+                    </p>
+                  )}
                 </div>
-                <span className="affiliate-badge">Afiliado</span>
+                <span className={`affiliate-badge ${affiliate.pending ? 'affiliate-pending' : ''}`}>
+                  {affiliate.pending ? '⏳ Pendente' : '🤝 Afiliado'}
+                </span>
               </div>
 
               <div className="affiliate-permissions">
@@ -208,13 +253,29 @@ const Affiliates = () => {
                 />
               </div>
               <div className="form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="email@exemplo.com"
-                />
+                <label>Email *</label>
+                {editingAffiliate ? (
+                  <input
+                    type="email"
+                    value={formData.email}
+                    disabled
+                    className="disabled-input"
+                    placeholder="email@exemplo.com"
+                  />
+                ) : (
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="email@exemplo.com"
+                    required
+                  />
+                )}
+                <p className="form-hint">
+                  {editingAffiliate 
+                    ? 'O email não pode ser alterado após a criação' 
+                    : 'O afiliado precisará usar este email para se registrar no sistema'}
+                </p>
               </div>
               <div className="form-group">
                 <label>Telefone</label>
@@ -265,11 +326,11 @@ const Affiliates = () => {
               </div>
 
               <div className="form-actions">
-                <button type="button" className="btn btn-secondary" onClick={closeModal}>
+                <button type="button" className="btn btn-secondary" onClick={closeModal} disabled={loading}>
                   Cancelar
                 </button>
-                <button type="submit" className="btn btn-primary">
-                  {editingAffiliate ? 'Salvar Alterações' : 'Adicionar Afiliado'}
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                  {loading ? 'Salvando...' : (editingAffiliate ? 'Salvar Alterações' : 'Adicionar Afiliado')}
                 </button>
               </div>
             </form>

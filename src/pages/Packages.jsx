@@ -4,7 +4,8 @@ import { storage } from '../utils/storage'
 import './Packages.css'
 
 const Packages = () => {
-  const { getUserKey } = useUser()
+  const { getUserKey, currentUser } = useUser()
+  const isAffiliate = currentUser?.role === 'affiliate'
   const [packages, setPackages] = useState([
     {
       id: 1,
@@ -76,19 +77,24 @@ const Packages = () => {
   }, [getUserKey])
 
   useEffect(() => {
-    const savePackages = async () => {
-      await storage.set(getUserKey('packages'), packages)
+    // Afiliados não podem salvar alterações
+    if (!isAffiliate) {
+      const savePackages = async () => {
+        await storage.set(getUserKey('packages'), packages)
+      }
+      savePackages()
     }
-    savePackages()
-  }, [packages, getUserKey])
+  }, [packages, getUserKey, isAffiliate])
 
   const handleChange = (id, field, value) => {
+    if (isAffiliate) return // Afiliados não podem editar
     setPackages(prev => prev.map(pkg => 
       pkg.id === id ? { ...pkg, [field]: value } : pkg
     ))
   }
 
   const handleItemChange = (packageId, itemIndex, value) => {
+    if (isAffiliate) return // Afiliados não podem editar
     setPackages(prev => prev.map(pkg => {
       if (pkg.id === packageId) {
         const newItems = [...pkg.items]
@@ -100,6 +106,7 @@ const Packages = () => {
   }
 
   const addItem = (packageId) => {
+    if (isAffiliate) return // Afiliados não podem adicionar
     setPackages(prev => prev.map(pkg => 
       pkg.id === packageId 
         ? { ...pkg, items: [...pkg.items, 'Novo item'] }
@@ -108,6 +115,7 @@ const Packages = () => {
   }
 
   const removeItem = (packageId, itemIndex) => {
+    if (isAffiliate) return // Afiliados não podem remover
     setPackages(prev => prev.map(pkg => {
       if (pkg.id === packageId) {
         const newItems = pkg.items.filter((_, index) => index !== itemIndex)
@@ -128,28 +136,41 @@ const Packages = () => {
         {packages.map((pkg) => (
           <div key={pkg.id} className="package-card">
             <div className="package-header">
-              <input
-                type="text"
-                className="package-name editable"
-                value={pkg.name}
-                onChange={(e) => handleChange(pkg.id, 'name', e.target.value)}
-              />
-              <input
-                type="text"
-                className="package-price"
-                value={pkg.price}
-                onChange={(e) => handleChange(pkg.id, 'price', e.target.value)}
-                placeholder="R$ 0,00"
-              />
+              {isAffiliate ? (
+                <>
+                  <h3 className="package-name">{pkg.name}</h3>
+                  <span className="package-price">{pkg.price}</span>
+                </>
+              ) : (
+                <>
+                  <input
+                    type="text"
+                    className="package-name editable"
+                    value={pkg.name}
+                    onChange={(e) => handleChange(pkg.id, 'name', e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    className="package-price"
+                    value={pkg.price}
+                    onChange={(e) => handleChange(pkg.id, 'price', e.target.value)}
+                    placeholder="R$ 0,00"
+                  />
+                </>
+              )}
             </div>
             
-            <textarea
-              className="package-description editable"
-              value={pkg.description}
-              onChange={(e) => handleChange(pkg.id, 'description', e.target.value)}
-              placeholder="Descrição do pacote..."
-              rows="2"
-            />
+            {isAffiliate ? (
+              <p className="package-description">{pkg.description}</p>
+            ) : (
+              <textarea
+                className="package-description editable"
+                value={pkg.description}
+                onChange={(e) => handleChange(pkg.id, 'description', e.target.value)}
+                placeholder="Descrição do pacote..."
+                rows="2"
+              />
+            )}
 
             <div className="package-items">
               <div className="package-items-header">
@@ -157,28 +178,36 @@ const Packages = () => {
               </div>
               {pkg.items.map((item, index) => (
                 <div key={index} className="package-item">
-                  <input
-                    type="text"
-                    className="package-item-input editable"
-                    value={item}
-                    onChange={(e) => handleItemChange(pkg.id, index, e.target.value)}
-                    placeholder="Item do pacote..."
-                  />
-                  <button
-                    className="btn-remove-item"
-                    onClick={() => removeItem(pkg.id, index)}
-                    title="Remover item"
-                  >
-                    ×
-                  </button>
+                  {isAffiliate ? (
+                    <span className="package-item-text">{item}</span>
+                  ) : (
+                    <>
+                      <input
+                        type="text"
+                        className="package-item-input editable"
+                        value={item}
+                        onChange={(e) => handleItemChange(pkg.id, index, e.target.value)}
+                        placeholder="Item do pacote..."
+                      />
+                      <button
+                        className="btn-remove-item"
+                        onClick={() => removeItem(pkg.id, index)}
+                        title="Remover item"
+                      >
+                        ×
+                      </button>
+                    </>
+                  )}
                 </div>
               ))}
-              <button
-                className="btn btn-small btn-secondary"
-                onClick={() => addItem(pkg.id)}
-              >
-                + Adicionar item
-              </button>
+              {!isAffiliate && (
+                <button
+                  className="btn btn-small btn-secondary"
+                  onClick={() => addItem(pkg.id)}
+                >
+                  + Adicionar item
+                </button>
+              )}
             </div>
           </div>
         ))}
