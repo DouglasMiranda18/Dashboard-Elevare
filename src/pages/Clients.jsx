@@ -161,11 +161,13 @@ const Clients = () => {
       }
     })
 
+    const total = monthlyRevenue + sitesRevenue
+    
     return {
-      monthlyRevenue,
-      sitesRevenue,
-      total: monthlyRevenue + sitesRevenue,
-      totalRevenue // Renda total para afiliados
+      monthlyRevenue: monthlyRevenue || 0,
+      sitesRevenue: sitesRevenue || 0,
+      total: total || 0,
+      totalRevenue: totalRevenue || 0 // Renda total para afiliados
     }
   }
 
