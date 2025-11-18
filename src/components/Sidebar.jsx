@@ -16,6 +16,7 @@ const Sidebar = () => {
     { path: '/packages', label: 'Pacotes', icon: '📦', key: 'packages' },
     { path: '/content-ideas', label: 'Ideias de Conteúdo', icon: '💡', key: 'content-ideas' },
     { path: '/clients', label: 'Clientes e Sites', icon: '👥', key: 'clients' },
+    { path: '/commissions', label: 'Comissões', icon: '💵', key: 'commissions' },
     { path: '/checklists', label: 'Checklists', icon: '✅', key: 'checklists' },
     { path: '/documents', label: 'Documentos', icon: '📄', key: 'documents' },
   ]

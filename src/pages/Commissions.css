@@ -1,0 +1,328 @@
+.commissions-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.affiliate-selector-card {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.affiliate-selector-card label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.commission-summary-card {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--cream);
+}
+
+.summary-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin: 0;
+}
+
+.affiliate-level-badge {
+  padding: 0.5rem 1rem;
+  background: var(--primary-gradient);
+  color: var(--white);
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, var(--cream) 0%, var(--tan) 100%);
+  border-radius: var(--border-radius-sm);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-card.stat-paid {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+}
+
+.stat-card.stat-pending {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-content h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-medium);
+  margin: 0 0 0.5rem 0;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin: 0;
+}
+
+.commissions-filters {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.month-selector {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.month-display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.month-picker {
+  padding: 0.5rem;
+  border: 2px solid var(--primary);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-dark);
+  transition: border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.month-picker:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(85, 174, 190, 0.2);
+}
+
+.month-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.btn-month-nav,
+.btn-today-month {
+  padding: 0.75rem 1.5rem;
+  background: var(--primary-gradient);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-month-nav:hover,
+.btn-today-month:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.btn-today-month {
+  background: var(--brown);
+}
+
+.status-filter {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.status-filter label {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.commissions-list {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+}
+
+.commissions-table {
+  width: 100%;
+  min-width: 800px;
+}
+
+.commissions-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.commissions-table thead {
+  background: var(--cream);
+  border-radius: 8px 8px 0 0;
+}
+
+.commissions-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--primary-dark);
+  font-size: 0.95rem;
+  border-bottom: 2px solid var(--primary);
+}
+
+.commissions-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--cream);
+  color: var(--text-dark);
+}
+
+.commissions-table tbody tr:hover {
+  background: rgba(58, 139, 153, 0.05);
+}
+
+.commission-description {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.commission-description strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.seller-info {
+  font-size: 0.85rem;
+  color: var(--text-medium);
+  font-style: italic;
+}
+
+.type-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.type-badge.type-direct {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  color: var(--primary-dark);
+}
+
+.type-badge.type-recruitment {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  color: #e65100;
+}
+
+.status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status-badge.status-pending {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.status-badge.status-paid {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-badge.status-cancelled {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.commission-amount {
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .commissions-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .month-selector {
+    flex-direction: column;
+  }
+
+  .month-display {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn-month-nav,
+  .btn-today-month {
+    width: 100%;
+  }
+
+  .commissions-table {
+    font-size: 0.85rem;
+  }
+
+  .commissions-table th,
+  .commissions-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .summary-stats {
+    grid-template-columns: 1fr;
+  }
+}
+

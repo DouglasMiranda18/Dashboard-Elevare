@@ -4,7 +4,7 @@ import { storage } from '../utils/storage'
 import './Clients.css'
 
 const Clients = () => {
-  const { getUserKey, currentUser } = useUser()
+  const { getUserKey, currentUser, calculateCommissions } = useUser()
   const isAffiliate = currentUser?.role === 'affiliate'
   const [clients, setClients] = useState([])
   const [selectedMonth, setSelectedMonth] = useState(() => {
@@ -248,36 +248,98 @@ const Clients = () => {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    let updatedClient = null
+    
     if (editingClient) {
+      const oldClient = clients.find(c => c.id === editingClient)
+      updatedClient = { ...oldClient, ...formData }
       setClients(prev => prev.map(client => 
-        client.id === editingClient ? { ...client, ...formData } : client
+        client.id === editingClient ? updatedClient : client
       ))
     } else {
-      const newClient = {
+      updatedClient = {
         id: Date.now(),
         ...formData,
         createdAt: new Date().toISOString()
       }
-      setClients(prev => [newClient, ...prev])
+      setClients(prev => [updatedClient, ...prev])
     }
+    
+    // Calcular comissões se for afiliado e status for active
+    if (isAffiliate && updatedClient.status === 'active' && currentUser?.id) {
+      try {
+        if (updatedClient.type === 'client') {
+          // Para clientes, calcular comissão baseada na renda mensal do mês atual
+          const currentMonth = selectedMonth
+          const revenue = getClientRevenueForMonth(updatedClient, currentMonth)
+          if (revenue > 0) {
+            await calculateCommissions(revenue, currentUser.id)
+          }
+        } else if (updatedClient.type === 'site') {
+          // Para sites, calcular comissão baseada no valor do site do mês atual
+          const currentMonth = selectedMonth
+          const siteValue = getSiteValueForMonth(updatedClient, currentMonth)
+          if (siteValue > 0) {
+            await calculateCommissions(siteValue, currentUser.id)
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao calcular comissões:', error)
+      }
+    }
+    
     closeModal()
   }
 
-  const handleRevenueSubmit = (e) => {
+  const handleRevenueSubmit = async (e) => {
     e.preventDefault()
+    const updatedClient = clients.find(c => c.id === editingRevenueClient)
+    const newClient = { ...updatedClient, monthlyRevenueHistory: formData.monthlyRevenueHistory }
+    
     setClients(prev => prev.map(client => 
-      client.id === editingRevenueClient ? { ...client, monthlyRevenueHistory: formData.monthlyRevenueHistory } : client
+      client.id === editingRevenueClient ? newClient : client
     ))
+    
+    // Calcular comissões se for afiliado e status for active
+    if (isAffiliate && newClient.status === 'active' && currentUser?.id) {
+      try {
+        const currentMonth = selectedMonth
+        const revenue = getClientRevenueForMonth(newClient, currentMonth)
+        if (revenue > 0) {
+          await calculateCommissions(revenue, currentUser.id)
+        }
+      } catch (error) {
+        console.error('Erro ao calcular comissões:', error)
+      }
+    }
+    
     closeModal()
   }
 
-  const handleSiteSubmit = (e) => {
+  const handleSiteSubmit = async (e) => {
     e.preventDefault()
+    const updatedSite = clients.find(c => c.id === editingSiteClient)
+    const newSite = { ...updatedSite, siteValueHistory: formData.siteValueHistory }
+    
     setClients(prev => prev.map(client => 
-      client.id === editingSiteClient ? { ...client, siteValueHistory: formData.siteValueHistory } : client
+      client.id === editingSiteClient ? newSite : client
     ))
+    
+    // Calcular comissões se for afiliado e status for active
+    if (isAffiliate && newSite.status === 'active' && currentUser?.id) {
+      try {
+        const currentMonth = selectedMonth
+        const siteValue = getSiteValueForMonth(newSite, currentMonth)
+        if (siteValue > 0) {
+          await calculateCommissions(siteValue, currentUser.id)
+        }
+      } catch (error) {
+        console.error('Erro ao calcular comissões:', error)
+      }
+    }
+    
     closeModal()
   }
 

@@ -91,12 +91,15 @@ export const UserProvider = ({ children }) => {
                 role: 'affiliate',
                 permissions: pendingUser.permissions || [],
                 phone: pendingUser.phone || '',
+                recruitedBy: pendingUser.recruitedBy || null,
+                commissionHistory: [],
+                totalCommissions: 0,
                 createdAt: pendingUser.createdAt || new Date().toISOString()
               }
             } else {
               // Criar novo usuário
               // Permissões padrão para novos afiliados
-              const defaultAffiliatePermissions = ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients']
+              const defaultAffiliatePermissions = ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients', 'commissions']
               
               newUserData = {
                 id: firebaseUser.uid,
@@ -104,6 +107,9 @@ export const UserProvider = ({ children }) => {
                 name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Usuário',
                 role: isFirstUser ? 'admin' : 'affiliate',
                 permissions: isFirstUser ? ['all'] : defaultAffiliatePermissions,
+                recruitedBy: null,
+                commissionHistory: [],
+                totalCommissions: 0,
                 createdAt: new Date().toISOString()
               }
             }
@@ -295,6 +301,9 @@ export const UserProvider = ({ children }) => {
           role: 'affiliate',
           permissions: pendingUser.permissions || [],
           phone: pendingUser.phone || '',
+          recruitedBy: pendingUser.recruitedBy || null,
+          commissionHistory: [],
+          totalCommissions: 0,
           createdAt: pendingUser.createdAt || new Date().toISOString()
         }
       } else {
@@ -308,6 +317,9 @@ export const UserProvider = ({ children }) => {
           name: name || firebaseUser.email?.split('@')[0] || 'Usuário',
           role: isFirstUser ? 'admin' : 'affiliate', // Primeiro usuário é admin, demais são afiliados
           permissions: isFirstUser ? ['all'] : defaultAffiliatePermissions,
+          recruitedBy: null,
+          commissionHistory: [],
+          totalCommissions: 0,
           createdAt: new Date().toISOString()
         }
       }
@@ -369,6 +381,116 @@ export const UserProvider = ({ children }) => {
     }
   }
 
+  // Calcular nível do afiliado na hierarquia
+  const getAffiliateLevel = (affiliateId, allUsers) => {
+    if (!affiliateId) return 0
+    
+    const affiliate = allUsers.find(u => u.id === affiliateId)
+    if (!affiliate || affiliate.role !== 'affiliate') return 0
+    
+    if (!affiliate.recruitedBy) return 1 // Nível 1 - não tem recrutador
+    
+    // Recursivamente calcular nível
+    let level = 1
+    let currentRecruiter = affiliate.recruitedBy
+    
+    while (currentRecruiter) {
+      const recruiter = allUsers.find(u => u.id === currentRecruiter)
+      if (!recruiter || recruiter.role !== 'affiliate') break
+      level++
+      currentRecruiter = recruiter.recruitedBy
+    }
+    
+    return level
+  }
+
+  // Calcular e distribuir comissões (20% total)
+  const calculateCommissions = async (saleValue, sellerAffiliateId) => {
+    try {
+      const allUsers = await fetchAllUsers()
+      const seller = allUsers.find(u => u.id === sellerAffiliateId && u.role === 'affiliate')
+      
+      if (!seller) {
+        return { success: false, error: 'Afiliado vendedor não encontrado' }
+      }
+      
+      const sellerLevel = getAffiliateLevel(sellerAffiliateId, allUsers)
+      const commissions = []
+      
+      if (sellerLevel === 1) {
+        // Nível 1: recebe 20% completo
+        commissions.push({
+          affiliateId: sellerAffiliateId,
+          affiliateName: seller.name,
+          amount: saleValue * 0.20,
+          percentage: 20,
+          type: 'direct',
+          description: 'Comissão de Venda Direta (20%)'
+        })
+      } else {
+        // Nível N (N ≥ 2): Vendedor 15%, Recrutador 5%
+        const sellerCommission = saleValue * 0.15
+        commissions.push({
+          affiliateId: sellerAffiliateId,
+          affiliateName: seller.name,
+          amount: sellerCommission,
+          percentage: 15,
+          type: 'direct',
+          description: 'Comissão de Venda Direta (15%)'
+        })
+        
+        // Buscar recrutador (N-1)
+        if (seller.recruitedBy) {
+          const recruiter = allUsers.find(u => u.id === seller.recruitedBy && u.role === 'affiliate')
+          if (recruiter) {
+            const recruiterCommission = saleValue * 0.05
+            commissions.push({
+              affiliateId: recruiter.id,
+              affiliateName: recruiter.name,
+              amount: recruiterCommission,
+              percentage: 5,
+              type: 'recruitment',
+              description: 'Bônus de Recrutamento (5%)'
+            })
+          }
+        }
+      }
+      
+      // Registrar comissões no histórico de cada afiliado
+      for (const commission of commissions) {
+        const userRef = doc(db, 'users', commission.affiliateId)
+        const userDoc = await getDoc(userRef)
+        const userData = userDoc.exists() ? userDoc.data() : {}
+        
+        const commissionHistory = userData.commissionHistory || []
+        commissionHistory.push({
+          id: `comm_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          saleValue: saleValue,
+          amount: commission.amount,
+          percentage: commission.percentage,
+          type: commission.type,
+          description: commission.description,
+          sellerId: sellerAffiliateId,
+          sellerName: seller.name,
+          date: new Date().toISOString(),
+          status: 'pending' // pending, paid, cancelled
+        })
+        
+        await updateDoc(userRef, {
+          commissionHistory: commissionHistory,
+          totalCommissions: (userData.totalCommissions || 0) + commission.amount,
+          updatedAt: new Date().toISOString()
+        })
+      }
+      
+      await fetchAllUsers()
+      return { success: true, commissions }
+    } catch (error) {
+      console.error('Erro ao calcular comissões:', error)
+      return { success: false, error: error.message }
+    }
+  }
+
   // Adicionar ou atualizar afiliado no Firestore
   const addAffiliate = async (affiliateData) => {
     try {
@@ -381,11 +503,18 @@ export const UserProvider = ({ children }) => {
         await updateUserRole(existingUser.id, 'affiliate', affiliateData.permissions || [])
         // Atualizar outros dados se necessário
         const userRef = doc(db, 'users', existingUser.id)
-        await updateDoc(userRef, {
+        const updateData = {
           name: affiliateData.name || existingUser.name,
           phone: affiliateData.phone || existingUser.phone,
           updatedAt: new Date().toISOString()
-        })
+        }
+        
+        // Adicionar recruitedBy se fornecido
+        if (affiliateData.recruitedBy) {
+          updateData.recruitedBy = affiliateData.recruitedBy
+        }
+        
+        await updateDoc(userRef, updateData)
         await fetchAllUsers()
         return { success: true, user: existingUser }
       } else {
@@ -399,6 +528,9 @@ export const UserProvider = ({ children }) => {
           phone: affiliateData.phone || '',
           role: 'affiliate',
           permissions: affiliateData.permissions || [],
+          recruitedBy: affiliateData.recruitedBy || null,
+          commissionHistory: [],
+          totalCommissions: 0,
           pending: true, // Marca como pendente até o usuário se registrar
           createdAt: new Date().toISOString()
         }
@@ -420,12 +552,19 @@ export const UserProvider = ({ children }) => {
       
       // Atualizar outros dados
       const userRef = doc(db, 'users', userId)
-      await updateDoc(userRef, {
+      const updateData = {
         name: affiliateData.name,
         phone: affiliateData.phone || '',
         email: affiliateData.email || '',
         updatedAt: new Date().toISOString()
-      })
+      }
+      
+      // Atualizar recruitedBy se fornecido
+      if (affiliateData.recruitedBy !== undefined) {
+        updateData.recruitedBy = affiliateData.recruitedBy || null
+      }
+      
+      await updateDoc(userRef, updateData)
       
       await fetchAllUsers()
       return { success: true }
@@ -511,7 +650,9 @@ export const UserProvider = ({ children }) => {
       updateAffiliate,
       deleteAffiliate,
       fetchAllUsers,
-      updateUserRole
+      updateUserRole,
+      getAffiliateLevel,
+      calculateCommissions
     }}>
       {children}
     </UserContext.Provider>

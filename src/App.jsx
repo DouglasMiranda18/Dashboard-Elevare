@@ -14,6 +14,7 @@ import Checklists from './pages/Checklists'
 import Documents from './pages/Documents'
 import Affiliates from './pages/Affiliates'
 import Users from './pages/Users'
+import Commissions from './pages/Commissions'
 import './App.css'
 
 const ProtectedRoute = ({ children, page }) => {
@@ -77,6 +78,7 @@ const AppContent = () => {
           <Route path="/clients" element={<ProtectedRoute page="clients"><Clients /></ProtectedRoute>} />
           <Route path="/checklists" element={<ProtectedRoute page="checklists"><Checklists /></ProtectedRoute>} />
           <Route path="/documents" element={<ProtectedRoute page="documents"><Documents /></ProtectedRoute>} />
+          <Route path="/commissions" element={<ProtectedRoute page="commissions"><Commissions /></ProtectedRoute>} />
           <Route path="/affiliates" element={<AdminRoute><Affiliates /></AdminRoute>} />
           <Route path="/users" element={<AdminRoute><Users /></AdminRoute>} />
         </Routes>

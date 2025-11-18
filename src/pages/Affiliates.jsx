@@ -3,7 +3,7 @@ import { useUser } from '../contexts/UserContext'
 import './Affiliates.css'
 
 const Affiliates = () => {
-  const { allFirebaseUsers, addAffiliate, updateAffiliate, deleteAffiliate, fetchAllUsers } = useUser()
+  const { allFirebaseUsers, addAffiliate, updateAffiliate, deleteAffiliate, fetchAllUsers, getAffiliateLevel } = useUser()
   const [showModal, setShowModal] = useState(false)
   const [editingAffiliate, setEditingAffiliate] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -11,12 +11,18 @@ const Affiliates = () => {
     name: '',
     email: '',
     phone: '',
-    permissions: []
+    permissions: [],
+    recruitedBy: null
   })
 
   // Filtrar apenas afiliados (excluir pendentes deletados)
   const affiliates = allFirebaseUsers.filter(u => 
     u.role === 'affiliate' && !u.deleted
+  )
+
+  // Lista de afiliados disponíveis para recrutamento (excluindo o próprio se estiver editando)
+  const availableRecruiters = affiliates.filter(a => 
+    !editingAffiliate || a.id !== editingAffiliate
   )
 
   const availablePages = [
@@ -40,7 +46,8 @@ const Affiliates = () => {
         name: affiliate.name || '',
         email: affiliate.email || '',
         phone: affiliate.phone || '',
-        permissions: affiliate.permissions || []
+        permissions: affiliate.permissions || [],
+        recruitedBy: affiliate.recruitedBy || null
       })
     } else {
       setEditingAffiliate(null)
@@ -48,7 +55,8 @@ const Affiliates = () => {
         name: '',
         email: '',
         phone: '',
-        permissions: ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients'] // Permissões padrão
+        permissions: ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients', 'commissions'], // Permissões padrão
+        recruitedBy: null
       })
     }
     setShowModal(true)
@@ -61,7 +69,8 @@ const Affiliates = () => {
       name: '',
       email: '',
       phone: '',
-      permissions: ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients'] // Permissões padrão
+      permissions: ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients'], // Permissões padrão
+      recruitedBy: null
     })
   }
 
@@ -180,6 +189,19 @@ const Affiliates = () => {
                   {affiliate.phone && (
                     <p className="affiliate-phone">{affiliate.phone}</p>
                   )}
+                  {affiliate.recruitedBy && (() => {
+                    const recruiter = allFirebaseUsers.find(u => u.id === affiliate.recruitedBy)
+                    return recruiter ? (
+                      <p className="affiliate-recruiter">
+                        👤 Recrutado por: {recruiter.name}
+                        {getAffiliateLevel && (
+                          <span className="affiliate-level">
+                            (Nível {getAffiliateLevel(affiliate.id, allFirebaseUsers)})
+                          </span>
+                        )}
+                      </p>
+                    ) : null
+                  })()}
                   {affiliate.pending && (
                     <p className="affiliate-pending-notice">
                       ⏳ Aguardando registro
@@ -285,6 +307,31 @@ const Affiliates = () => {
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="(00) 00000-0000"
                 />
+              </div>
+
+              <div className="form-group">
+                <label>Recrutado por (Opcional)</label>
+                <select
+                  value={formData.recruitedBy || ''}
+                  onChange={(e) => setFormData({ ...formData, recruitedBy: e.target.value || null })}
+                  className="form-select"
+                >
+                  <option value="">Nenhum (Nível 1)</option>
+                  {availableRecruiters.map(recruiter => (
+                    <option key={recruiter.id} value={recruiter.id}>
+                      {recruiter.name} {recruiter.pending ? '(Pendente)' : ''}
+                      {getAffiliateLevel && ` - Nível ${getAffiliateLevel(recruiter.id, allFirebaseUsers)}`}
+                    </option>
+                  ))}
+                </select>
+                <p className="form-hint">
+                  Selecione o afiliado que recrutou este novo afiliado. Isso define a hierarquia de comissões.
+                  {formData.recruitedBy && getAffiliateLevel && (
+                    <span className="level-preview">
+                      {' '}Este afiliado será Nível {getAffiliateLevel(formData.recruitedBy, allFirebaseUsers) + 1}
+                    </span>
+                  )}
+                </p>
               </div>
               
               <div className="form-group">
