@@ -15,10 +15,14 @@ const Messages = () => {
     blackFridayInstagram: '🖤 BLACK FRIDAY ELEVARE chegou! 🖤\n\nOi! Que tal aproveitar a maior promoção do ano para dar um UP nas suas redes sociais? 🚀\n\n🔥 OFERTAS ESPECIAIS:\n\n💎 Até 40% OFF nos pacotes\n💰 Parcelamento em até 12x\n⚡ Suporte VIP\n🎁 Bônus exclusivos\n📊 Relatórios semanais\n\nEssa oportunidade é única e por tempo limitado! 🕐\n\nVamos conversar? Me chama no direct ou WhatsApp! 💬\n\n#BlackFriday #MarketingDigital #RedesSociais',
     blackFridayClosing: '🖤 BLACK FRIDAY - ÚLTIMAS HORAS! ⏰\n\nOlá! Ainda está pensando? Essa é sua ÚLTIMA CHANCE de transformar suas redes sociais com condições EXCLUSIVAS! 🎯\n\n🔥 O QUE ESTÁ INCLUÍDO:\n\n✅ Descontos de até 40% nos pacotes\n✅ Condições de pagamento facilitadas (até 12x)\n✅ Suporte prioritário 24/7\n✅ Consultoria estratégica GRÁTIS\n✅ Relatórios detalhados de performance\n✅ Bônus exclusivos da Black Friday\n\n⏰ A OFERTA TERMINA EM POUCAS HORAS!\n\nNão deixe essa oportunidade passar! Vamos fechar essa parceria agora? Estou aqui para tirar todas as suas dúvidas e montar o melhor plano para o seu negócio! 💪\n\nMe chama agora mesmo! 💬',
     blackFridayFollowUp: '🖤 Olá! Lembrei de você na nossa BLACK FRIDAY! 🖤\n\nAinda está pensando? Essa é a MELHOR OPORTUNIDADE DO ANO para investir no crescimento das suas redes sociais! 🚀\n\n🔥 LEMBRE-SE:\n\n💎 Descontos de até 40% (últimas horas!)\n💰 Parcelamento facilitado\n⚡ Suporte VIP\n🎁 Bônus exclusivos\n📈 Resultados garantidos\n\n⏰ A OFERTA ESTÁ ACABANDO!\n\nNão queremos que você perca essa chance única de transformar sua presença digital com condições especiais que só acontecem uma vez por ano!\n\nPosso te ajudar com alguma dúvida? Estou à disposição para conversarmos e montarmos o melhor plano para você! 💬\n\nVamos fechar essa parceria? 🚀',
-    siteWhatsApp: 'Olá! Vi que você tem um negócio incrível! 💼\n\nVocê já tem um site profissional para sua empresa? 🌐\n\nA Elevare desenvolve sites modernos, responsivos e otimizados que vão transformar sua presença digital!\n\n🎯 O QUE OFERECEMOS:\n\n💻 Landing Pages (R$ 1.200)\n🍽️ Sites para Restaurantes (R$ 2.000)\n🏢 Sites Institucionais Completos (R$ 2.400)\n\n✅ Design profissional\n✅ Responsivo (mobile e desktop)\n✅ Otimizado para conversão\n✅ Integração com WhatsApp/iFood\n✅ SEO básico incluído\n\nQuer saber mais detalhes? Tem um minuto para conversarmos? 💬',
-    siteInstagram: 'Oi! Adorei seu perfil! 👋\n\nVocê já pensou em ter um site profissional para seu negócio? 🌐\n\nA Elevare cria sites modernos e responsivos que vão alavancar suas vendas online!\n\n💻 Nossos serviços:\n• Landing Pages\n• Sites para Restaurantes\n• Sites Institucionais\n\n✅ Design moderno\n✅ Mobile friendly\n✅ Otimizado para conversão\n\nVamos conversar? Me chama no direct! 💬\n\n#WebDesign #SiteProfissional #MarketingDigital',
-    siteClosing: 'Olá! Que tal darmos o próximo passo? 🚀\n\nUm site profissional é essencial para qualquer negócio que quer crescer no digital! 🌐\n\n🎯 O QUE VOCÊ VAI GANHAR:\n\n✅ Site moderno e responsivo\n✅ Design profissional personalizado\n✅ Otimizado para conversão\n✅ Integração com WhatsApp/iFood\n✅ SEO básico incluído\n✅ Suporte durante todo o processo\n✅ Entrega rápida e eficiente\n\n💼 NOSSOS PACOTES:\n\n💻 Landing Page: R$ 1.200\n🍽️ Site Restaurante: R$ 2.000\n🏢 Site Institucional: R$ 2.400\n\nVamos transformar sua presença digital agora mesmo? Estou aqui para tirar todas as suas dúvidas e montar a melhor solução para você! 💪\n\nMe chama para conversarmos! 💬',
-    siteFollowUp: 'Olá! Espero que esteja tudo bem! 😊\n\nLembrei de você! Você ainda está pensando em criar um site profissional para seu negócio? 🌐\n\n📊 SABIA QUE:\n\n• 97% dos consumidores pesquisam online antes de comprar\n• Empresas com site profissional vendem 3x mais\n• Um site é seu cartão de visitas 24/7\n\n💼 TEMOS A SOLUÇÃO PERFEITA PARA VOCÊ:\n\n✅ Sites modernos e responsivos\n✅ Design profissional\n✅ Otimizado para conversão\n✅ Entrega rápida\n\nEstou à disposição para conversarmos e montarmos o melhor projeto para seu negócio! 💬\n\nVamos fechar essa parceria? 🚀'
+    siteWhatsApp: 'Olá! Vi que você tem um negócio incrível! 💼\n\nVocê já tem um site profissional para sua empresa? 🌐\n\nA Elevare desenvolve sites modernos, responsivos e otimizados que vão transformar sua presença digital!\n\n🎯 O QUE OFERECEMOS:\n\n💻 Landing Pages (R$ 1.200)\n🛍️ Sites para Lojas (R$ 2.000)\n🏢 Sites Institucionais Completos (R$ 2.400)\n\n✅ Design profissional\n✅ Responsivo (mobile e desktop)\n✅ Otimizado para conversão\n✅ Integração com WhatsApp\n✅ SEO básico incluído\n\nQuer saber mais detalhes? Tem um minuto para conversarmos? 💬',
+    siteInstagram: 'Oi! Adorei seu perfil! 👋\n\nVocê já pensou em ter um site profissional para seu negócio? 🌐\n\nA Elevare cria sites modernos e responsivos que vão alavancar suas vendas online!\n\n💻 Nossos serviços:\n• Landing Pages\n• Sites para Lojas\n• Sites Institucionais\n\n✅ Design moderno\n✅ Mobile friendly\n✅ Otimizado para conversão\n\nVamos conversar? Me chama no direct! 💬\n\n#WebDesign #SiteProfissional #MarketingDigital',
+    siteClosing: 'Olá! Que tal darmos o próximo passo? 🚀\n\nUm site profissional é essencial para qualquer negócio que quer crescer no digital! 🌐\n\n🎯 O QUE VOCÊ VAI GANHAR:\n\n✅ Site moderno e responsivo\n✅ Design profissional personalizado\n✅ Otimizado para conversão\n✅ Integração com WhatsApp\n✅ SEO básico incluído\n✅ Suporte durante todo o processo\n✅ Entrega rápida e eficiente\n\n💼 NOSSOS PACOTES:\n\n💻 Landing Page: R$ 1.200\n🛍️ Site para Lojas: R$ 2.000\n🏢 Site Institucional: R$ 2.400\n\nVamos transformar sua presença digital agora mesmo? Estou aqui para tirar todas as suas dúvidas e montar a melhor solução para você! 💪\n\nMe chama para conversarmos! 💬',
+    siteFollowUp: 'Olá! Espero que esteja tudo bem! 😊\n\nLembrei de você! Você ainda está pensando em criar um site profissional para seu negócio? 🌐\n\n📊 SABIA QUE:\n\n• 97% dos consumidores pesquisam online antes de comprar\n• Empresas com site profissional vendem 3x mais\n• Um site é seu cartão de visitas 24/7\n\n💼 TEMOS A SOLUÇÃO PERFEITA PARA VOCÊ:\n\n✅ Sites modernos e responsivos\n✅ Design profissional\n✅ Otimizado para conversão\n✅ Entrega rápida\n\nEstou à disposição para conversarmos e montarmos o melhor projeto para seu negócio! 💬\n\nVamos fechar essa parceria? 🚀',
+    blackFridaySiteWhatsApp: '🖤 BLACK FRIDAY ELEVARE - SITES COM SUPER DESCONTO! 🖤\n\nOlá! Chegou a hora de ter seu site profissional com condições IMPERDÍVEIS! 🎉\n\nA Black Friday da Elevare está aqui com descontos EXCLUSIVOS em desenvolvimento de sites!\n\n🔥 O QUE VOCÊ VAI GANHAR:\n\n💎 Até 40% OFF em todos os nossos sites\n💰 Parcelamento facilitado (até 12x)\n⚡ Suporte prioritário durante todo o projeto\n🎁 Bônus: SEO básico GRÁTIS\n🎁 Bônus: Integração WhatsApp GRÁTIS\n📈 Design moderno e responsivo\n\n💻 NOSSOS PACOTES COM DESCONTO:\n\n• Landing Page: De R$ 1.200 → Por apenas R$ 720\n• Site para Lojas: De R$ 2.000 → Por apenas R$ 1.200\n• Site Institucional: De R$ 2.400 → Por apenas R$ 1.440\n\n⏰ OFERTA VÁLIDA APENAS ATÉ [DATA]\n\nEssa é a oportunidade perfeita para ter seu site profissional! Quer saber todos os detalhes? Me chama aqui! 💬',
+    blackFridaySiteInstagram: '🖤 BLACK FRIDAY - SITES COM SUPER DESCONTO! 🖤\n\nOi! Que tal aproveitar a maior promoção do ano para ter seu site profissional? 🚀\n\n🔥 OFERTAS ESPECIAIS:\n\n💎 Até 40% OFF em sites\n💰 Parcelamento em até 12x\n⚡ Suporte VIP\n🎁 Bônus exclusivos\n📱 Design responsivo\n\n💻 NOSSOS PACOTES:\n• Landing Page\n• Site para Lojas\n• Site Institucional\n\nEssa oportunidade é única e por tempo limitado! 🕐\n\nVamos conversar? Me chama no direct ou WhatsApp! 💬\n\n#BlackFriday #WebDesign #SiteProfissional',
+    blackFridaySiteClosing: '🖤 BLACK FRIDAY - ÚLTIMAS HORAS PARA SEU SITE! ⏰\n\nOlá! Ainda está pensando? Essa é sua ÚLTIMA CHANCE de ter um site profissional com condições EXCLUSIVAS! 🎯\n\n🔥 O QUE ESTÁ INCLUÍDO:\n\n✅ Até 40% OFF em todos os sites\n✅ Parcelamento facilitado (até 12x)\n✅ Suporte prioritário 24/7\n✅ SEO básico GRÁTIS\n✅ Integração WhatsApp GRÁTIS\n✅ Design moderno e responsivo\n✅ Entrega rápida\n✅ Bônus exclusivos da Black Friday\n\n💻 NOSSOS PACOTES COM DESCONTO:\n\n• Landing Page: De R$ 1.200 → R$ 720\n• Site para Lojas: De R$ 2.000 → R$ 1.200\n• Site Institucional: De R$ 2.400 → R$ 1.440\n\n⏰ A OFERTA TERMINA EM POUCAS HORAS!\n\nNão deixe essa oportunidade passar! Vamos fechar essa parceria agora? Estou aqui para tirar todas as suas dúvidas e montar o melhor projeto para você! 💪\n\nMe chama agora mesmo! 💬',
+    blackFridaySiteFollowUp: '🖤 Olá! Lembrei de você na nossa BLACK FRIDAY DE SITES! 🖤\n\nAinda está pensando? Essa é a MELHOR OPORTUNIDADE DO ANO para ter seu site profissional! 🚀\n\n🔥 LEMBRE-SE:\n\n💎 Até 40% OFF (últimas horas!)\n💰 Parcelamento facilitado\n⚡ Suporte VIP\n🎁 Bônus exclusivos (SEO + WhatsApp GRÁTIS)\n📈 Resultados garantidos\n\n💻 TEMOS A SOLUÇÃO PERFEITA:\n\n✅ Sites modernos e responsivos\n✅ Design profissional\n✅ Otimizado para conversão\n✅ Entrega rápida\n\n⏰ A OFERTA ESTÁ ACABANDO!\n\nNão queremos que você perca essa chance única de ter um site profissional com condições especiais que só acontecem uma vez por ano!\n\nPosso te ajudar com alguma dúvida? Estou à disposição para conversarmos e montarmos o melhor projeto para você! 💬\n\nVamos fechar essa parceria? 🚀'
   })
 
   useEffect(() => {
@@ -38,7 +42,12 @@ const Messages = () => {
           siteWhatsApp: saved.siteWhatsApp || prev.siteWhatsApp,
           siteInstagram: saved.siteInstagram || prev.siteInstagram,
           siteClosing: saved.siteClosing || prev.siteClosing,
-          siteFollowUp: saved.siteFollowUp || prev.siteFollowUp
+          siteFollowUp: saved.siteFollowUp || prev.siteFollowUp,
+          // Garantir que as mensagens de Black Friday para Sites existam
+          blackFridaySiteWhatsApp: saved.blackFridaySiteWhatsApp || prev.blackFridaySiteWhatsApp,
+          blackFridaySiteInstagram: saved.blackFridaySiteInstagram || prev.blackFridaySiteInstagram,
+          blackFridaySiteClosing: saved.blackFridaySiteClosing || prev.blackFridaySiteClosing,
+          blackFridaySiteFollowUp: saved.blackFridaySiteFollowUp || prev.blackFridaySiteFollowUp
         }))
       }
     }
@@ -162,6 +171,34 @@ const Messages = () => {
       title: '💻 Site - Follow-up', 
       icon: '💻',
       description: 'Follow-up para prospecção de sites'
+    },
+    { 
+      key: 'blackFridaySiteWhatsApp', 
+      title: '🖤 Black Friday - Site WhatsApp', 
+      icon: '🖤',
+      description: 'Mensagem de Black Friday para sites via WhatsApp',
+      highlight: true
+    },
+    { 
+      key: 'blackFridaySiteInstagram', 
+      title: '🖤 Black Friday - Site Instagram', 
+      icon: '🖤',
+      description: 'Mensagem de Black Friday para sites via Instagram DM',
+      highlight: true
+    },
+    { 
+      key: 'blackFridaySiteClosing', 
+      title: '🖤 Black Friday - Site Fechamento', 
+      icon: '🖤',
+      description: 'Script de fechamento de Black Friday para sites',
+      highlight: true
+    },
+    { 
+      key: 'blackFridaySiteFollowUp', 
+      title: '🖤 Black Friday - Site Follow-up', 
+      icon: '🖤',
+      description: 'Follow-up de Black Friday para sites',
+      highlight: true
     },
   ]
 

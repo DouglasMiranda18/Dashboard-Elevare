@@ -57,16 +57,16 @@ const Packages = () => {
     },
     {
       id: 4,
-      name: 'Site para Restaurante / Gastronomia',
-      description: 'Ideal para restaurantes, petiscarias e deliveries que precisam de um cardápio online robusto. Design focado em "apetite appeal" (fotos de comida).',
+      name: 'Site para Lojas',
+      description: 'Ideal para lojas físicas e e-commerce que precisam de um site completo para vender online. Design moderno focado em conversão e experiência do cliente.',
       price: 'R$ 2.000,00',
       items: [
-        'Design focado em "apetite appeal"',
-        'Fotos de comida profissionais',
+        'Design moderno e profissional',
+        'Catálogo de produtos interativo',
         'Integração com botão de pedidos',
-        'Cardápio digital interativo',
+        'Carrinho de compras',
         'Mapa de localização',
-        'Área de reservas',
+        'Área de contato e suporte',
         'Design responsivo',
         'Pagamento único'
       ]
