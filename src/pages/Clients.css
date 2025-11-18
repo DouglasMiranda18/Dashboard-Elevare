@@ -133,19 +133,21 @@
 }
 
 .revenue-total {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: var(--white);
+  background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
+  border: 2px solid var(--primary);
+  color: var(--text-dark);
   position: relative;
   z-index: 1;
 }
 
 .revenue-total .revenue-content {
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 .revenue-total .revenue-content h3 {
-  color: var(--white) !important;
+  color: var(--primary-dark) !important;
   opacity: 1 !important;
+  font-weight: 700;
 }
 
 .revenue-icon {
@@ -164,10 +166,15 @@
 }
 
 /* Emojis em fundos azuis - cor bege/creme */
-.revenue-total .revenue-icon,
 .revenue-sites .revenue-icon {
   filter: grayscale(0.6) brightness(0.8) sepia(1) hue-rotate(35deg) saturate(2.5);
   opacity: 0.95;
+}
+
+/* Emoji no card Total Geral - fundo bege, emoji azul */
+.revenue-total .revenue-icon {
+  filter: grayscale(0.8) brightness(0.4) sepia(1) hue-rotate(190deg) saturate(4);
+  opacity: 0.9;
 }
 
 /* Emoji no título */
@@ -211,7 +218,7 @@
 }
 
 .revenue-total-value {
-  color: var(--white) !important;
+  color: var(--primary-dark) !important;
   font-size: 2rem;
   font-weight: 700;
   display: block;
@@ -225,7 +232,8 @@
 }
 
 .revenue-total .revenue-count {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-medium);
+  font-weight: 500;
 }
 
 .clients-grid {
