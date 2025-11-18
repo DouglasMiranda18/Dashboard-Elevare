@@ -1,0 +1,125 @@
+.documents-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.documents-table-container {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px var(--shadow);
+  overflow-x: auto;
+}
+
+.documents-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.documents-table thead {
+  background: var(--cream);
+  border-radius: 8px;
+}
+
+.documents-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--primary-dark);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.documents-table tbody tr {
+  border-bottom: 1px solid var(--cream);
+  transition: background 0.2s ease;
+}
+
+.documents-table tbody tr:hover {
+  background: var(--cream);
+}
+
+.documents-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.documents-table td {
+  padding: 1rem;
+  color: var(--text-dark);
+  font-size: 0.95rem;
+}
+
+.doc-name {
+  font-weight: 500;
+  color: var(--primary-dark);
+}
+
+.doc-description {
+  color: var(--text-light);
+  max-width: 300px;
+}
+
+.doc-link {
+  min-width: 150px;
+}
+
+.doc-link-btn {
+  color: var(--primary);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.doc-link-btn:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.doc-link-text {
+  color: var(--text-light);
+  word-break: break-all;
+  max-width: 200px;
+  display: inline-block;
+}
+
+.doc-actions {
+  display: flex;
+  gap: 0.5rem;
+  min-width: 100px;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: transform 0.2s ease;
+}
+
+.btn-icon:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .documents-table-container {
+    padding: 1rem;
+  }
+
+  .documents-table {
+    font-size: 0.85rem;
+  }
+
+  .documents-table th,
+  .documents-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .doc-description {
+    max-width: 150px;
+  }
+}

@@ -1,0 +1,141 @@
+.checklists-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.checklists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.checklist-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: box-shadow 0.3s ease;
+}
+
+.checklist-card:hover {
+  box-shadow: 0 4px 12px var(--shadow-hover);
+}
+
+.checklist-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--cream);
+}
+
+.checklist-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin: 0 0 1rem 0;
+}
+
+.checklist-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--cream);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  min-width: 40px;
+  text-align: right;
+}
+
+.checklist-items {
+  margin-bottom: 1.5rem;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.checklist-item:hover {
+  background: var(--cream);
+}
+
+.checklist-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.checklist-item-text {
+  flex: 1;
+  padding: 0.5rem;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.checklist-item-text:focus {
+  border-color: var(--primary);
+  background: var(--white);
+  outline: none;
+}
+
+.checklist-item-text.checked {
+  text-decoration: line-through;
+  color: var(--text-light);
+  opacity: 0.7;
+}
+
+.btn-remove-checklist-item {
+  background: #e74c3c;
+  color: var(--white);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+  flex-shrink: 0;
+  opacity: 0;
+}
+
+.checklist-item:hover .btn-remove-checklist-item {
+  opacity: 1;
+}
+
+.btn-remove-checklist-item:hover {
+  background: #c0392b;
+}
+
+@media (max-width: 768px) {
+  .checklists-grid {
+    grid-template-columns: 1fr;
+  }
+}

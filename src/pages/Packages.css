@@ -1,0 +1,151 @@
+.packages-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.packages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.package-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.package-card:hover {
+  box-shadow: 0 4px 12px var(--shadow-hover);
+}
+
+.package-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.package-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.5rem;
+  transition: border-color 0.3s ease;
+  flex: 1;
+}
+
+.package-name:focus {
+  border-bottom-color: var(--primary);
+  outline: none;
+}
+
+.package-price {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary);
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.5rem;
+  transition: border-color 0.3s ease;
+  text-align: right;
+  min-width: 120px;
+}
+
+.package-price:focus {
+  border-bottom-color: var(--primary);
+  outline: none;
+}
+
+.package-description {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--cream);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--text-light);
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s ease;
+}
+
+.package-description:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.package-items {
+  margin-top: 1rem;
+}
+
+.package-items-header h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+}
+
+.package-item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.package-item-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid var(--cream);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: border-color 0.3s ease;
+}
+
+.package-item-input:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.btn-remove-item {
+  background: #e74c3c;
+  color: var(--white);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+  flex-shrink: 0;
+}
+
+.btn-remove-item:hover {
+  background: #c0392b;
+}
+
+@media (max-width: 768px) {
+  .packages-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .package-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .package-price {
+    text-align: left;
+    width: 100%;
+  }
+}
