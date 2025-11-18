@@ -334,7 +334,7 @@ const Clients = () => {
       {!isAffiliate && (
         <div className="revenue-section">
           <div className="revenue-header">
-            <h2 className="revenue-title">💰 Acompanhamento de Renda</h2>
+            <h2 className="revenue-title">Acompanhamento de Renda</h2>
             <div className="month-selector">
               <button className="btn-month-nav" onClick={() => changeMonth(-1)}>
                 ← Mês Anterior
@@ -389,7 +389,7 @@ const Clients = () => {
       {isAffiliate && (
         <div className="revenue-section commission-section">
           <div className="revenue-header">
-            <h2 className="revenue-title">💰 Minha Renda</h2>
+            <h2 className="revenue-title">Minha Renda</h2>
             <div className="month-selector">
               <button className="btn-month-nav" onClick={() => changeMonth(-1)}>
                 ← Mês Anterior
@@ -465,7 +465,7 @@ const Clients = () => {
                 {/* Mostrar valor baseado no tipo - Apenas para Admins */}
                 {!isAffiliate && client.type === 'client' && (
                   <div className="client-revenue">
-                    <span className="revenue-label">💰 Renda Mensal ({formatMonth(selectedMonth)}):</span>
+                    <span className="revenue-label revenue-label-money">Renda Mensal ({formatMonth(selectedMonth)}):</span>
                     <span className="revenue-amount">{formatCurrency(currentRevenue)}</span>
                     <button 
                       className="btn-edit-revenue"
@@ -478,7 +478,7 @@ const Clients = () => {
                 )}
                 {!isAffiliate && client.type === 'site' && (
                   <div className="client-revenue">
-                    <span className="revenue-label">💵 Valor do Site ({formatMonth(selectedMonth)}):</span>
+                    <span className="revenue-label revenue-label-site">Valor do Site ({formatMonth(selectedMonth)}):</span>
                     <span className="revenue-amount">{formatCurrency(currentSiteValue)}</span>
                     <button 
                       className="btn-edit-revenue"
@@ -492,13 +492,13 @@ const Clients = () => {
                 {/* Mostrar renda para afiliados */}
                 {isAffiliate && client.type === 'client' && (
                   <div className="client-revenue client-commission">
-                    <span className="revenue-label">💰 Renda Mensal ({formatMonth(selectedMonth)}):</span>
+                    <span className="revenue-label revenue-label-money">Renda Mensal ({formatMonth(selectedMonth)}):</span>
                     <span className="revenue-amount commission-amount">{formatCurrency(currentRevenue)}</span>
                   </div>
                 )}
                 {isAffiliate && client.type === 'site' && (
                   <div className="client-revenue client-commission">
-                    <span className="revenue-label">💵 Valor do Site ({formatMonth(selectedMonth)}):</span>
+                    <span className="revenue-label revenue-label-site">Valor do Site ({formatMonth(selectedMonth)}):</span>
                     <span className="revenue-amount commission-amount">{formatCurrency(currentSiteValue)}</span>
                   </div>
                 )}
@@ -524,7 +524,7 @@ const Clients = () => {
                   )}
                   {client.type === 'site' && client.siteCommission && (
                     <div className="client-info-item">
-                      <span className="client-info-label">💰 Comissão:</span>
+                      <span className="client-info-label client-info-label-money">Comissão:</span>
                       <span>{formatCurrency(client.siteCommission)}</span>
                     </div>
                   )}

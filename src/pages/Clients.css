@@ -131,6 +131,38 @@
 .revenue-icon {
   font-size: 3rem;
   flex-shrink: 0;
+  display: inline-block;
+  filter: grayscale(1) brightness(0.5) sepia(1) hue-rotate(180deg) saturate(2);
+  transition: filter 0.3s ease;
+}
+
+/* Emojis em fundos bege/creme - cor azul (primary) */
+.revenue-card:not(.revenue-total):not(.revenue-sites) .revenue-icon,
+.revenue-monthly .revenue-icon {
+  filter: grayscale(0.8) brightness(0.4) sepia(1) hue-rotate(190deg) saturate(4);
+  opacity: 0.9;
+}
+
+/* Emojis em fundos azuis - cor bege/creme */
+.revenue-total .revenue-icon,
+.revenue-sites .revenue-icon {
+  filter: grayscale(0.6) brightness(0.8) sepia(1) hue-rotate(35deg) saturate(2.5);
+  opacity: 0.95;
+}
+
+/* Emoji no título */
+.revenue-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.revenue-title::before {
+  content: '💰';
+  font-size: 1.5rem;
+  filter: grayscale(0.8) brightness(0.4) sepia(1) hue-rotate(190deg) saturate(4);
+  display: inline-block;
+  opacity: 0.9;
 }
 
 .revenue-content {
@@ -251,6 +283,25 @@
   color: var(--primary-dark);
   font-size: 0.95rem;
   flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.revenue-label-money::before {
+  content: '💰';
+  filter: grayscale(0.8) brightness(0.4) sepia(1) hue-rotate(190deg) saturate(4);
+  display: inline-block;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.revenue-label-site::before {
+  content: '💵';
+  filter: grayscale(0.8) brightness(0.4) sepia(1) hue-rotate(190deg) saturate(4);
+  display: inline-block;
+  font-size: 1rem;
+  opacity: 0.9;
 }
 
 .revenue-amount {
@@ -298,6 +349,17 @@
   font-weight: 600;
   color: var(--text-dark);
   min-width: 100px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.client-info-label-money::before {
+  content: '💰';
+  filter: grayscale(0.8) brightness(0.4) sepia(1) hue-rotate(190deg) saturate(4);
+  display: inline-block;
+  font-size: 1rem;
+  opacity: 0.9;
 }
 
 .client-notes {
