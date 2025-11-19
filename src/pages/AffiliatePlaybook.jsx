@@ -23,6 +23,87 @@ const AffiliatePlaybook = () => {
 
       <div className="playbook-section">
         <div className="section-header">
+          <span className="section-icon">📅</span>
+          <h2>Sua Meta Diária</h2>
+        </div>
+        <div className="section-content">
+          <p className="warning-text">Vendas é um jogo de números. Siga essa rotina para ter resultados:</p>
+          
+          <div className="daily-routine">
+            <div className="routine-item">
+              <span className="routine-number">1</span>
+              <div>
+                <strong>Garimpar:</strong> Encontrar 10 novas lojas por dia.
+              </div>
+            </div>
+            <div className="routine-item">
+              <span className="routine-number">2</span>
+              <div>
+                <strong>Interagir:</strong> Curtir 3 fotos e comentar 1 foto dessas lojas (para eles verem seu nome).
+              </div>
+            </div>
+            <div className="routine-item">
+              <span className="routine-number">3</span>
+              <div>
+                <strong>Abordar:</strong> Enviar o script para as 10 lojas.
+              </div>
+            </div>
+          </div>
+
+          <div className="math-box">
+            <h3>Matemática:</h3>
+            <p>10 lojas por dia = <strong>300 lojas no mês</strong>. Se você fechar 1% disso, são <strong>3 vendas no bolso</strong>. Mantenha a constância!</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="playbook-section">
+        <div className="section-header">
+          <span className="section-icon">🔍</span>
+          <h2>O Filtro de Ouro (Quem abordar?)</h2>
+        </div>
+        <div className="section-content">
+          <p className="warning-text">Não perca tempo com quem não compra. Analise o perfil antes de mandar mensagem:</p>
+          
+          <div className="info-box">
+            <h3>Seguidores (Para E-commerce):</h3>
+            <p>Ideal entre <strong>5k e 50k</strong>. (Menos que isso não tem verba; mais que isso já tem equipe de marketing).</p>
+          </div>
+
+          <div className="info-box">
+            <h3>O Link da Bio (O mais importante para E-commerce):</h3>
+            <div className="link-types">
+              <div className="link-type red">
+                <span className="status-icon">🔴</span>
+                <div>
+                  <strong>Link direto pro WhatsApp:</strong> É o CLIENTE PERFEITO. Ele sofre com atendimento manual.
+                </div>
+              </div>
+              <div className="link-type orange">
+                <span className="status-icon">🟠</span>
+                <div>
+                  <strong>Linktree/Biolink:</strong> Bom cliente. Ele tenta organizar, mas ainda não é profissional.
+                </div>
+              </div>
+              <div className="link-type green">
+                <span className="status-icon">🟢</span>
+                <div>
+                  <strong>Site Ruim/Lento:</strong> Cliente bom. Ofereça a nossa tecnologia superior (cálculo de frete e etiqueta pronta).
+                </div>
+              </div>
+              <div className="link-type skip">
+                <span className="status-icon">❌</span>
+                <div>
+                  <strong>Site Profissional:</strong> Pule. Não perca tempo.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="playbook-section">
+        <div className="section-header">
           <span className="section-icon">🎯</span>
           <h2>Resumo: Qual produto oferecer?</h2>
         </div>
@@ -168,53 +249,8 @@ const AffiliatePlaybook = () => {
 
       <div className="playbook-section">
         <div className="section-header">
-          <span className="section-icon">🔍</span>
-          <h2>O Filtro de Ouro (Quem abordar?)</h2>
-        </div>
-        <div className="section-content">
-          <p className="warning-text">Não perca tempo com quem não compra. Analise o perfil antes de mandar mensagem:</p>
-          
-          <div className="info-box">
-            <h3>Seguidores (Para E-commerce):</h3>
-            <p>Ideal entre <strong>5k e 50k</strong>. (Menos que isso não tem verba; mais que isso já tem equipe de marketing).</p>
-          </div>
-
-          <div className="info-box">
-            <h3>O Link da Bio (O mais importante para E-commerce):</h3>
-            <div className="link-types">
-              <div className="link-type red">
-                <span className="status-icon">🔴</span>
-                <div>
-                  <strong>Link direto pro WhatsApp:</strong> É o CLIENTE PERFEITO. Ele sofre com atendimento manual.
-                </div>
-              </div>
-              <div className="link-type orange">
-                <span className="status-icon">🟠</span>
-                <div>
-                  <strong>Linktree/Biolink:</strong> Bom cliente. Ele tenta organizar, mas ainda não é profissional.
-                </div>
-              </div>
-              <div className="link-type green">
-                <span className="status-icon">🟢</span>
-                <div>
-                  <strong>Site Ruim/Lento:</strong> Cliente bom. Ofereça a nossa tecnologia superior (cálculo de frete e etiqueta pronta).
-                </div>
-              </div>
-              <div className="link-type skip">
-                <span className="status-icon">❌</span>
-                <div>
-                  <strong>Site Profissional:</strong> Pule. Não perca tempo.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="playbook-section">
-        <div className="section-header">
           <span className="section-icon">🎥</span>
-          <h2>Passo 4: A Prova (O Pulo do Gato)</h2>
+          <h2>A Prova (O Pulo do Gato)</h2>
         </div>
         <div className="section-content">
           <p>Se o cliente responder demonstrando interesse ("Como funciona?", "Qual o valor?"), não mande apenas texto.</p>

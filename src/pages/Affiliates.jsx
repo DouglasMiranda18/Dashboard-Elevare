@@ -40,6 +40,9 @@ const Affiliates = () => {
     { key: 'packages', label: 'Pacotes', icon: '📦' },
     { key: 'content-ideas', label: 'Ideias de Conteúdo', icon: '💡' },
     { key: 'clients', label: 'Clientes e Sites', icon: '👥' },
+    { key: 'commissions', label: 'Comissões', icon: '💵' },
+    { key: 'playbook', label: 'Playbook do Afiliado', icon: '📚' },
+    { key: 'affiliates', label: 'Afiliados', icon: '🤝' },
     { key: 'checklists', label: 'Checklists', icon: '✅' },
     { key: 'documents', label: 'Documentos', icon: '📄' }
   ]
