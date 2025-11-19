@@ -99,7 +99,7 @@ export const UserProvider = ({ children }) => {
             } else {
               // Criar novo usuário
               // Permissões padrão para novos afiliados
-              const defaultAffiliatePermissions = ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients', 'commissions', 'affiliates']
+              const defaultAffiliatePermissions = ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients', 'commissions', 'affiliates', 'playbook']
               
               newUserData = {
                 id: firebaseUser.uid,

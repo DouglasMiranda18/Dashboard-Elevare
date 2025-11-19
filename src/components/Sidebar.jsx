@@ -17,6 +17,7 @@ const Sidebar = () => {
     { path: '/content-ideas', label: 'Ideias de Conteúdo', icon: '💡', key: 'content-ideas' },
     { path: '/clients', label: 'Clientes e Sites', icon: '👥', key: 'clients' },
     { path: '/commissions', label: 'Comissões', icon: '💵', key: 'commissions' },
+    { path: '/playbook', label: 'Playbook do Afiliado', icon: '📚', key: 'playbook' },
     { path: '/checklists', label: 'Checklists', icon: '✅', key: 'checklists' },
     { path: '/documents', label: 'Documentos', icon: '📄', key: 'documents' },
   ]
