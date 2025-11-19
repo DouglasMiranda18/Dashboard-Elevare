@@ -24,7 +24,8 @@
   font-size: 1.5rem;
   margin: 0;
   font-weight: 400;
-  opacity: 0.95;
+  opacity: 1;
+  color: white;
 }
 
 .playbook-intro {
