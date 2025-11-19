@@ -5,8 +5,8 @@ const AffiliatePlaybook = () => {
   return (
     <div className="playbook-page">
       <div className="playbook-header">
-        <h1>📚 Playbook do Afiliado</h1>
-        <h2>Como Vender Sites Automáticos</h2>
+        <h1>📚 Manual do Afiliado</h1>
+        <h2>Guia Completo de Vendas (Todos os Nichos)</h2>
       </div>
 
       <div className="playbook-intro">
@@ -14,35 +14,76 @@ const AffiliatePlaybook = () => {
           <strong>Bem-vindo ao time!</strong> O segredo para vender nossos sites não é ser um vendedor chato, é ser um <strong>Consultor de Negócios</strong>.
         </p>
         <p className="intro-text">
-          O seu cliente (o dono de loja) sofre todos os dias com um problema: <strong>Atendimento manual no WhatsApp</strong>. Ele perde tempo respondendo "quanto é o frete?" e perde vendas porque demora a responder.
+          Na Agência Elevare, nós não fazemos apenas lojas. Nós criamos a <strong>presença digital completa</strong>. Isso significa que qualquer empresa ou profissional que você encontrar é um cliente em potencial.
         </p>
         <p className="intro-text highlight">
-          <strong>A sua missão:</strong> Mostrar que ele pode vender dormindo. Siga o passo a passo abaixo.
+          <strong>Para ter sucesso:</strong> Você precisa oferecer o produto certo para a pessoa certa. Use este guia para identificar a oportunidade.
         </p>
       </div>
 
       <div className="playbook-section">
         <div className="section-header">
           <span className="section-icon">🎯</span>
-          <h2>Passo 1: Onde encontrar o cliente (Garimpo)</h2>
+          <h2>Resumo: Qual produto oferecer?</h2>
         </div>
         <div className="section-content">
-          <p>O seu <strong>"ouro"</strong> está no Instagram. Você procura lojas que já têm movimento, mas estão desorganizadas.</p>
+          <p>Para facilitar sua vida, decore essa regra:</p>
+          
+          <div className="product-rules">
+            <div className="product-rule">
+              <span className="rule-icon">🛒</span>
+              <div>
+                <strong>Vende Produto Físico?</strong>
+                <p>➔ Ofereça <strong>Loja Virtual (E-commerce)</strong></p>
+              </div>
+            </div>
+            <div className="product-rule">
+              <span className="rule-icon">💼</span>
+              <div>
+                <strong>Vende Serviço ou Curso?</strong>
+                <p>➔ Ofereça <strong>Landing Page (LP)</strong></p>
+              </div>
+            </div>
+            <div className="product-rule">
+              <span className="rule-icon">🏢</span>
+              <div>
+                <strong>Vende para Outras Empresas (B2B)?</strong>
+                <p>➔ Ofereça <strong>Site Institucional</strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="playbook-section">
+        <div className="section-header">
+          <span className="section-icon">📂</span>
+          <h2>CATEGORIA 1: Lojas e Comércio (E-commerce)</h2>
+        </div>
+        <div className="section-content">
+          <p className="category-subtitle">Para quem vende produtos físicos (Roupas, Eletrônicos, Tabacaria).</p>
           
           <div className="info-box">
-            <h3>Quem procurar:</h3>
-            <ul>
-              <li>Lojas de Roupas / Moda</li>
-              <li>Lojas de Importados (Eletrônicos, iPhones, Tênis)</li>
-              <li>Tabacarias e Acessórios</li>
-              <li>Suplementos</li>
-            </ul>
+            <h3>🩹 A Dor do Cliente:</h3>
+            <p>Perde tempo respondendo preço no WhatsApp e perde vendas pela demora.</p>
+          </div>
+
+          <div className="info-box success">
+            <h3>✅ A Solução Elevare:</h3>
+            <p>Site automático, cálculo de frete, controle de estoque e etiqueta de envio pronta.</p>
           </div>
 
           <div className="info-box">
-            <h3>Como pesquisar:</h3>
-            <p>Vá na busca do Instagram e digite: <strong>[Nicho] + [Cidade]</strong></p>
+            <h3>🔍 Onde achar:</h3>
+            <p>Instagram (Pesquisar por "Loja de...", "Imports", "Moda").</p>
             <p className="example">Exemplo: "Moda Masculina SP", "Imports Recife", "Tabacaria Curitiba".</p>
+          </div>
+
+          <div className="script-box">
+            <h3>💬 Script de Abordagem:</h3>
+            <div className="script-content">
+              <p>"Olá! Vi que vocês vendem pelo WhatsApp. Nós criamos um sistema onde o cliente compra sozinho, calcula o frete e a etiqueta já sai pronta na sua impressora. Quer parar de perder vendas por demora no atendimento e vender no automático?"</p>
+            </div>
           </div>
 
           <div className="tip-box">
@@ -56,19 +97,90 @@ const AffiliatePlaybook = () => {
 
       <div className="playbook-section">
         <div className="section-header">
+          <span className="section-icon">📂</span>
+          <h2>CATEGORIA 2: Profissionais e Serviços (Landing Pages / LP)</h2>
+        </div>
+        <div className="section-content">
+          <p className="category-subtitle">Para quem vende serviço, cursos ou capta leads (Médicos, Dentistas, Personal Trainers, Corretores, Infoprodutores).</p>
+          
+          <div className="info-box">
+            <h3>🩹 A Dor do Cliente:</h3>
+            <p>Roda anúncios (tráfego pago) mas manda para o WhatsApp ou Direct e o cliente desiste. Ou usa um "Linktree" amador que não passa confiança.</p>
+          </div>
+
+          <div className="info-box success">
+            <h3>✅ A Solução Elevare:</h3>
+            <p>Landing Page de Alta Conversão. Uma página focada em fazer a pessoa apertar o botão de "Agendar" ou "Comprar".</p>
+          </div>
+
+          <div className="info-box">
+            <h3>🔍 Onde achar:</h3>
+            <ul>
+              <li><strong>Biblioteca de Anúncios do Facebook:</strong> Veja quem está gastando dinheiro com anúncio mas não tem site.</li>
+              <li><strong>Instagram:</strong> Perfis de Estética, Odontologia, Advocacia.</li>
+            </ul>
+          </div>
+
+          <div className="script-box">
+            <h3>💬 Script de Abordagem:</h3>
+            <div className="script-content">
+              <p>"Olá, [Nome/Doutor]! Vi que você produz um conteúdo excelente no Instagram.</p>
+              <p>Notei que você usa um link simples na bio. Para um profissional do seu nível, isso acaba diminuindo a percepção de valor do seu serviço.</p>
+              <p>Na Agência Elevare, criamos Landing Pages de alta conversão projetadas para transformar seguidores em agendamentos reais. Posso te mostrar um exemplo de como ficaria sua apresentação profissional?"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="playbook-section">
+        <div className="section-header">
+          <span className="section-icon">📂</span>
+          <h2>CATEGORIA 3: Empresas e Negócios Locais (Institucional)</h2>
+        </div>
+        <div className="section-content">
+          <p className="category-subtitle">Para empresas que precisam passar autoridade (Escritórios de Engenharia, Construtoras, Consultorias, B2B).</p>
+          
+          <div className="info-box">
+            <h3>🩹 A Dor do Cliente:</h3>
+            <p>"Quem não é visto não é lembrado". Se alguém jogar o nome da empresa no Google, não acha nada ou acha um Facebook desatualizado. Parece empresa fantasma.</p>
+          </div>
+
+          <div className="info-box success">
+            <h3>✅ A Solução Elevare:</h3>
+            <p>Site Institucional. É o cartão de visitas digital. Passa seriedade, mostra o portfólio e a história da empresa.</p>
+          </div>
+
+          <div className="info-box">
+            <h3>🔍 Onde achar:</h3>
+            <p><strong>Google Maps.</strong> Procure empresas na sua cidade que não têm o botão "Website" no cadastro do Google.</p>
+          </div>
+
+          <div className="script-box">
+            <h3>💬 Script de Abordagem:</h3>
+            <div className="script-content">
+              <p>"Olá, tudo bem? Estou entrando em contato com a [Nome da Empresa].</p>
+              <p>Estava pesquisando empresas do setor na região e notei que vocês não possuem um site oficial. Hoje em dia, a primeira coisa que um cliente grande faz é buscar no Google, e não ter um site pode passar a impressão errada sobre o tamanho da empresa.</p>
+              <p>Nós desenvolvemos sites institucionais modernos que servem como um portfólio digital para validar a autoridade de vocês. Faz sentido conversarmos sobre a modernização da marca?"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="playbook-section">
+        <div className="section-header">
           <span className="section-icon">🔍</span>
-          <h2>Passo 2: O Filtro de Ouro (Quem abordar?)</h2>
+          <h2>O Filtro de Ouro (Quem abordar?)</h2>
         </div>
         <div className="section-content">
           <p className="warning-text">Não perca tempo com quem não compra. Analise o perfil antes de mandar mensagem:</p>
           
           <div className="info-box">
-            <h3>Seguidores:</h3>
+            <h3>Seguidores (Para E-commerce):</h3>
             <p>Ideal entre <strong>5k e 50k</strong>. (Menos que isso não tem verba; mais que isso já tem equipe de marketing).</p>
           </div>
 
           <div className="info-box">
-            <h3>O Link da Bio (O mais importante):</h3>
+            <h3>O Link da Bio (O mais importante para E-commerce):</h3>
             <div className="link-types">
               <div className="link-type red">
                 <span className="status-icon">🔴</span>
@@ -94,36 +206,6 @@ const AffiliatePlaybook = () => {
                   <strong>Site Profissional:</strong> Pule. Não perca tempo.
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="playbook-section">
-        <div className="section-header">
-          <span className="section-icon">💬</span>
-          <h2>Passo 3: A Abordagem (Scripts Prontos)</h2>
-        </div>
-        <div className="section-content">
-          <p>O objetivo da primeira mensagem não é vender, é gerar curiosidade. Escolha o script que mais combina com você.</p>
-          
-          <div className="script-box">
-            <h3>Opção A: O Consultor (Foco em Dor)</h3>
-            <div className="script-content">
-              <p>"Olá, [Nome da Loja]! Tudo bem? Acompanho o trabalho de vocês e vejo um potencial gigante.</p>
-              <p>Notei que vocês ainda direcionam as vendas para o WhatsApp. Eu trabalho com e-commerce e vejo muitas lojas perdendo até 30% das vendas pela demora natural no atendimento humano.</p>
-              <p>A Agência Elevare tem um sistema onde o cliente compra sozinho, calcula o frete e a etiqueta de envio já sai pronta na sua impressora.</p>
-              <p>Você tem interesse em automatizar suas vendas ou prefere continuar no manual?"</p>
-            </div>
-          </div>
-
-          <div className="script-box">
-            <h3>Opção B: O Visual (Foco na Referência)</h3>
-            <div className="script-content">
-              <p>"Fala, equipe da [Nome da Loja]! Estava olhando o feed de vocês, as fotos são muito boas. Parabéns.</p>
-              <p>Só achei que falta um site profissional para valorizar a marca de vocês e passar mais confiança pro cliente final.</p>
-              <p>Dá uma olhada nesse projeto que entregamos recentemente, acho que combina muito com o estilo de vocês: 👇 <a href="https://tfimports01.com.br/" target="_blank" rel="noopener noreferrer">https://tfimports01.com.br/</a></p>
-              <p>O que achou desse visual? Conseguimos montar uma estrutura dessa pra você vender no automático."</p>
             </div>
           </div>
         </div>
