@@ -132,6 +132,13 @@ const AffiliatePlaybook = () => {
                 <p>➔ Ofereça <strong>Site Institucional</strong></p>
               </div>
             </div>
+            <div className="product-rule">
+              <span className="rule-icon">📱</span>
+              <div>
+                <strong>Precisa de Presença nas Redes Sociais?</strong>
+                <p>➔ Ofereça <strong>Gestão de Social Media</strong></p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -242,6 +249,69 @@ const AffiliatePlaybook = () => {
               <p>"Olá, tudo bem? Estou entrando em contato com a [Nome da Empresa].</p>
               <p>Estava pesquisando empresas do setor na região e notei que vocês não possuem um site oficial. Hoje em dia, a primeira coisa que um cliente grande faz é buscar no Google, e não ter um site pode passar a impressão errada sobre o tamanho da empresa.</p>
               <p>Nós desenvolvemos sites institucionais modernos que servem como um portfólio digital para validar a autoridade de vocês. Faz sentido conversarmos sobre a modernização da marca?"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="playbook-section">
+        <div className="section-header">
+          <span className="section-icon">📂</span>
+          <h2>CATEGORIA 4: Gestão de Social Media</h2>
+        </div>
+        <div className="section-content">
+          <p className="category-subtitle">Para negócios que precisam de presença profissional nas redes sociais (Restaurantes, Cafés, Lojas, Serviços, Profissionais).</p>
+          
+          <div className="info-box">
+            <h3>🩹 A Dor do Cliente:</h3>
+            <p>Posta esporadicamente, não tem tempo para criar conteúdo de qualidade, perde engajamento e não consegue manter uma presença consistente nas redes sociais. Ou paga caro para agências grandes que não dão atenção personalizada.</p>
+          </div>
+
+          <div className="info-box success">
+            <h3>✅ A Solução Elevare:</h3>
+            <p>Gestão completa de redes sociais com conteúdo profissional, estratégia personalizada e acompanhamento presencial. Dois planos disponíveis:</p>
+            <ul style={{ marginTop: '0.5rem' }}>
+              <li><strong>Plano Profissional (R$ 800/mês):</strong> 8 Reels, Stories diários, 3 dias presenciais, até 15 artes</li>
+              <li><strong>Plano Premium (R$ 1.000/mês):</strong> 12 Reels, Stories diários, 5 dias presenciais, fotos gastronômicas, artes ilimitadas, tráfego pago</li>
+            </ul>
+          </div>
+
+          <div className="info-box">
+            <h3>🔍 Onde achar:</h3>
+            <ul>
+              <li><strong>Restaurantes e Cafés:</strong> Perfis com poucos posts ou posts amadores, sem estratégia clara</li>
+              <li><strong>Lojas Físicas:</strong> Que têm Instagram mas não postam regularmente ou com baixa qualidade</li>
+              <li><strong>Profissionais de Serviço:</strong> Que precisam de conteúdo para atrair clientes mas não têm tempo</li>
+              <li><strong>Negócios Locais:</strong> Que competem com grandes marcas e precisam se destacar</li>
+            </ul>
+          </div>
+
+          <div className="script-box">
+            <h3>💬 Script de Abordagem:</h3>
+            <div className="script-content">
+              <p>"Olá, [Nome]! Tudo bem? Acompanho o trabalho de vocês e vejo que vocês têm um potencial incrível.</p>
+              <p>Notei que vocês postam esporadicamente no Instagram. Hoje em dia, a presença digital é fundamental para qualquer negócio, e manter uma estratégia consistente pode fazer toda a diferença no crescimento da marca.</p>
+              <p>Na Agência Elevare, oferecemos gestão completa de redes sociais com conteúdo profissional, estratégia personalizada e acompanhamento presencial. Trabalhamos com dois planos que se adaptam às necessidades de cada negócio.</p>
+              <p>Vocês têm interesse em profissionalizar a presença digital da marca e aumentar o engajamento com os clientes?"</p>
+            </div>
+          </div>
+
+          <div className="info-box">
+            <h3>💡 Argumentos de Venda:</h3>
+            <ul>
+              <li><strong>Conteúdo Profissional:</strong> Reels e Stories de alta qualidade que engajam</li>
+              <li><strong>Acompanhamento Presencial:</strong> Nossa equipe vai até você para capturar o melhor conteúdo</li>
+              <li><strong>Estratégia Personalizada:</strong> Cada plano é adaptado às necessidades do seu negócio</li>
+              <li><strong>Economia de Tempo:</strong> Você foca no negócio enquanto cuidamos das redes sociais</li>
+              <li><strong>Crescimento Orgânico:</strong> Mais engajamento = mais clientes = mais vendas</li>
+              <li><strong>Investimento Mensal:</strong> A partir de R$ 800/mês, muito mais acessível que agências tradicionais</li>
+            </ul>
+          </div>
+
+          <div className="tip-box">
+            <span className="tip-icon">💡</span>
+            <div>
+              <strong>Dica de Mestre:</strong> Para restaurantes e cafés, destaque o "Plano Premium" que inclui fotos gastronômicas profissionais. Para lojas e serviços, o "Plano Profissional" já é suficiente e mais acessível.
             </div>
           </div>
         </div>
