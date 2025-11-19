@@ -491,6 +491,55 @@ export const UserProvider = ({ children }) => {
     }
   }
 
+  // Marcar comissão como paga (apenas admin)
+  const markCommissionAsPaid = async (affiliateId, commissionId) => {
+    try {
+      const userRef = doc(db, 'users', affiliateId)
+      const userDoc = await getDoc(userRef)
+      
+      if (!userDoc.exists()) {
+        return { success: false, error: 'Usuário não encontrado' }
+      }
+      
+      const userData = userDoc.data()
+      const commissionHistory = userData.commissionHistory || []
+      
+      // Encontrar e atualizar a comissão
+      const updatedHistory = commissionHistory.map(comm => {
+        if (comm.id === commissionId && comm.status === 'pending') {
+          return {
+            ...comm,
+            status: 'paid',
+            paidAt: new Date().toISOString(),
+            paidBy: currentUser?.id || 'admin'
+          }
+        }
+        return comm
+      })
+      
+      // Verificar se a comissão foi encontrada e atualizada
+      const commission = commissionHistory.find(c => c.id === commissionId)
+      if (!commission) {
+        return { success: false, error: 'Comissão não encontrada' }
+      }
+      
+      if (commission.status !== 'pending') {
+        return { success: false, error: 'Comissão já foi processada' }
+      }
+      
+      await updateDoc(userRef, {
+        commissionHistory: updatedHistory,
+        updatedAt: new Date().toISOString()
+      })
+      
+      await fetchAllUsers()
+      return { success: true }
+    } catch (error) {
+      console.error('Erro ao marcar comissão como paga:', error)
+      return { success: false, error: error.message }
+    }
+  }
+
   // Adicionar ou atualizar afiliado no Firestore
   const addAffiliate = async (affiliateData) => {
     try {
@@ -652,7 +701,8 @@ export const UserProvider = ({ children }) => {
       fetchAllUsers,
       updateUserRole,
       getAffiliateLevel,
-      calculateCommissions
+      calculateCommissions,
+      markCommissionAsPaid
     }}>
       {children}
     </UserContext.Provider>

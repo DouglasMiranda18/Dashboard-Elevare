@@ -3,7 +3,7 @@ import { useUser } from '../contexts/UserContext'
 import './Commissions.css'
 
 const Commissions = () => {
-  const { currentUser, allFirebaseUsers, fetchAllUsers, getAffiliateLevel } = useUser()
+  const { currentUser, allFirebaseUsers, fetchAllUsers, getAffiliateLevel, markCommissionAsPaid } = useUser()
   const [selectedAffiliate, setSelectedAffiliate] = useState(null)
   const [filterStatus, setFilterStatus] = useState('all') // all, pending, paid, cancelled
   const [selectedMonth, setSelectedMonth] = useState(() => {
@@ -109,6 +109,21 @@ const Commissions = () => {
   const goToCurrentMonth = () => {
     const now = new Date()
     setSelectedMonth(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`)
+  }
+
+  const handleMarkAsPaid = async (commissionId) => {
+    if (!affiliate) return
+    
+    if (!window.confirm('Tem certeza que deseja marcar esta comissão como paga?')) {
+      return
+    }
+    
+    const result = await markCommissionAsPaid(affiliate.id, commissionId)
+    if (result.success) {
+      alert('Comissão marcada como paga com sucesso!')
+    } else {
+      alert('Erro ao marcar comissão como paga: ' + (result.error || 'Erro desconhecido'))
+    }
   }
 
   return (
@@ -229,6 +244,7 @@ const Commissions = () => {
                       <th>Valor da Venda</th>
                       <th>Comissão</th>
                       <th>Status</th>
+                      {isAdmin && <th>Ações</th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -262,6 +278,25 @@ const Commissions = () => {
                               {statusBadge.text}
                             </span>
                           </td>
+                          {isAdmin && (
+                            <td>
+                              <div className="commission-actions">
+                                {comm.status === 'pending' && (
+                                  <button
+                                    className="btn-mark-paid"
+                                    onClick={() => handleMarkAsPaid(comm.id)}
+                                  >
+                                    ✅ Marcar como Paga
+                                  </button>
+                                )}
+                                {comm.status === 'paid' && comm.paidAt && (
+                                  <span className="commission-paid-date">
+                                    Pago em {formatDate(comm.paidAt)}
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                          )}
                         </tr>
                       )
                     })}
