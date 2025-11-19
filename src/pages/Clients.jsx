@@ -8,6 +8,7 @@ const Clients = () => {
   const isAffiliate = currentUser?.role === 'affiliate'
   const isAdmin = currentUser?.role === 'admin'
   const [clients, setClients] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const now = new Date()
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
@@ -52,6 +53,7 @@ const Clients = () => {
           setClients([])
         }
       }
+      setIsLoading(false)
     }
     loadClients()
 
@@ -102,19 +104,10 @@ const Clients = () => {
   }, [getUserKey, isAdmin, allFirebaseUsers, currentUser])
 
   useEffect(() => {
+    // Não salvar enquanto está carregando
+    if (isLoading) return
+    
     const saveClients = async () => {
-      // Não salvar se não houver clientes (evita sobrescrever exclusões)
-      if (clients.length === 0) {
-        // Se for admin e não houver clientes próprios, limpar storage
-        if (isAdmin) {
-          const adminClients = clients.filter(c => !c.addedBy || c.addedBy === currentUser.id)
-          await storage.set('clients', adminClients)
-        } else {
-          await storage.set(getUserKey('clients'), [])
-        }
-        return
-      }
-      
       if (isAdmin) {
         // Admin salva apenas seus próprios clientes (sem os de afiliados)
         const adminClients = clients.filter(c => !c.addedBy || c.addedBy === currentUser.id)
@@ -133,7 +126,7 @@ const Clients = () => {
           }
         })
         
-        // Salvar cada grupo de clientes de afiliado
+        // Salvar cada grupo de clientes de afiliado (mesmo se vazio, para manter consistência)
         for (const [affiliateId, affiliateClients] of Object.entries(affiliateClientsMap)) {
           await storage.set(`${affiliateId}_clients`, affiliateClients)
         }
@@ -143,7 +136,7 @@ const Clients = () => {
       }
     }
     saveClients()
-  }, [clients, getUserKey, isAdmin, currentUser])
+  }, [clients, getUserKey, isAdmin, currentUser, isLoading])
 
   const [showModal, setShowModal] = useState(false)
   const [showRevenueModal, setShowRevenueModal] = useState(false)
