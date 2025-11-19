@@ -105,8 +105,8 @@
 }
 
 .stat-label {
-  color: var(--text-light);
-  font-weight: 500;
+  color: var(--text-medium);
+  font-weight: 600;
 }
 
 .stat-value {
@@ -176,13 +176,13 @@
 .empty-agenda {
   text-align: center;
   padding: 3rem 1rem;
-  color: var(--text-light);
+  color: var(--text-medium);
 }
 
 .empty-icon {
   font-size: 4rem;
   margin-bottom: 1rem;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .empty-agenda h3 {
@@ -296,8 +296,8 @@
 
 .task-status-completed .task-description {
   text-decoration: line-through;
-  color: var(--text-light);
-  opacity: 0.8;
+  color: var(--text-medium);
+  opacity: 0.85;
 }
 
 .btn-delete-task {

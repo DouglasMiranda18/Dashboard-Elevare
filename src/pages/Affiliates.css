@@ -88,8 +88,8 @@
 
 .affiliate-level {
   font-size: 0.85rem;
-  color: var(--text-medium);
-  font-weight: 400;
+  color: var(--primary-dark);
+  font-weight: 600;
   margin-left: 0.5rem;
 }
 
@@ -188,7 +188,8 @@
 
 .no-permissions {
   background: #fff3cd;
-  color: var(--text-light);
+  color: var(--text-dark);
+  font-weight: 500;
 }
 
 .affiliate-actions {

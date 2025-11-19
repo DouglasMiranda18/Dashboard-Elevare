@@ -56,7 +56,7 @@
 }
 
 .doc-description {
-  color: var(--text-light);
+  color: var(--text-medium);
   max-width: 300px;
 }
 
@@ -80,7 +80,7 @@
 }
 
 .doc-link-text {
-  color: var(--text-light);
+  color: var(--text-medium);
   word-break: break-all;
   max-width: 200px;
   display: inline-block;

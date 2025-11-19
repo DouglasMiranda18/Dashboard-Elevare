@@ -645,7 +645,7 @@ const Clients = () => {
                       <p className="client-company">{client.company}</p>
                     )}
                     {isAdmin && client.addedBy && client.addedBy !== currentUser?.id && client.addedByName && (
-                      <p style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginTop: '0.25rem' }}>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-medium)', marginTop: '0.25rem', fontWeight: '500' }}>
                         👤 Adicionado por: {client.addedByName}
                       </p>
                     )}
@@ -694,7 +694,7 @@ const Clients = () => {
                   <div className="client-revenue client-commission">
                     <span className="revenue-label revenue-label-money">Minha Comissão ({formatMonth(selectedMonth)}):</span>
                     <span className="revenue-amount commission-amount">{formatCurrency(calculateCommission(currentRevenue.toString()))}</span>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginLeft: '0.5rem' }}>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-medium)', marginLeft: '0.5rem', fontWeight: '500' }}>
                       (20% de {formatCurrency(currentRevenue)})
                     </span>
                   </div>
@@ -703,7 +703,7 @@ const Clients = () => {
                   <div className="client-revenue client-commission">
                     <span className="revenue-label revenue-label-site">Minha Comissão ({formatMonth(selectedMonth)}):</span>
                     <span className="revenue-amount commission-amount">{formatCurrency(calculateCommission(currentSiteValue.toString()))}</span>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginLeft: '0.5rem' }}>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-medium)', marginLeft: '0.5rem', fontWeight: '500' }}>
                       (20% de {formatCurrency(currentSiteValue)})
                     </span>
                   </div>
@@ -931,7 +931,7 @@ const Clients = () => {
             </div>
             <form onSubmit={handleRevenueSubmit}>
               <div className="revenue-history">
-                <p style={{ marginBottom: '1rem', color: 'var(--text-light)' }}>
+                <p style={{ marginBottom: '1rem', color: 'var(--text-medium)', fontWeight: '500' }}>
                   Edite a renda mensal para cada mês. Apenas meses com valor serão contabilizados.
                 </p>
                 {[...Array(12)].map((_, index) => {
@@ -975,7 +975,7 @@ const Clients = () => {
             </div>
             <form onSubmit={handleSiteSubmit}>
               <div className="revenue-history">
-                <p style={{ marginBottom: '1rem', color: 'var(--text-light)' }}>
+                <p style={{ marginBottom: '1rem', color: 'var(--text-medium)', fontWeight: '500' }}>
                   Edite o valor do site para cada mês. Insira o valor apenas no mês em que a venda foi feita.
                 </p>
                 {[...Array(12)].map((_, index) => {

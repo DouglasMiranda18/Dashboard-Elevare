@@ -8,11 +8,29 @@
 }
 
 .hero-card {
-  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+  background: linear-gradient(135deg, #1a4d7a 0%, var(--primary-dark) 50%, var(--primary) 100%);
   color: var(--white);
   padding: 3rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(58, 139, 153, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(58, 139, 153, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.5; }
 }
 
 .hero-card h2 {
@@ -25,14 +43,16 @@
 .tagline {
   font-size: 1.25rem;
   margin-bottom: 1.5rem;
-  opacity: 0.95;
-  font-weight: 300;
+  opacity: 1;
+  color: rgba(255, 255, 255, 0.98);
+  font-weight: 400;
 }
 
 .hero-card .description {
   font-size: 1.1rem;
   line-height: 1.8;
-  opacity: 0.9;
+  opacity: 1;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .objectives-section,
@@ -55,17 +75,37 @@
 }
 
 .objective-card {
-  background: var(--white);
+  background: linear-gradient(135deg, var(--white) 0%, #fafafa 100%);
   padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px var(--shadow);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(58, 139, 153, 0.15);
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.objective-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--primary-gradient);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
 }
 
 .objective-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px var(--shadow-hover);
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(58, 139, 153, 0.25);
+  border-color: var(--primary);
+}
+
+.objective-card:hover::before {
+  transform: scaleX(1);
 }
 
 .objective-icon {
@@ -82,8 +122,9 @@
 }
 
 .objective-card p {
-  color: var(--text-light);
+  color: var(--text-medium);
   line-height: 1.6;
+  font-weight: 500;
 }
 
 .quick-links-grid {
@@ -93,21 +134,56 @@
 }
 
 .quick-link-card {
-  background: var(--white);
+  background: linear-gradient(135deg, var(--white) 0%, #fafafa 100%);
   padding: 2rem 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px var(--shadow);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(58, 139, 153, 0.15);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: center;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-link-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--primary-gradient);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+.quick-link-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .quick-link-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px var(--shadow-hover);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(58, 139, 153, 0.3);
+  border-color: var(--primary);
+}
+
+.quick-link-card:hover::after {
+  opacity: 0.05;
+}
+
+.quick-link-card:hover .quick-link-icon {
+  transform: scale(1.15) rotate(5deg);
+}
+
+.quick-link-card:hover .quick-link-label {
+  color: var(--primary-dark);
+  font-weight: 600;
 }
 
 .quick-link-icon {
@@ -118,10 +194,15 @@
   align-items: center;
   justify-content: center;
   font-size: 2rem;
+  background: var(--primary-gradient);
+  color: var(--white);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(58, 139, 153, 0.3);
 }
 
 .quick-link-label {
   font-weight: 500;
   color: var(--text-dark);
   font-size: 0.95rem;
+  transition: all 0.4s ease;
 }

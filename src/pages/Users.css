@@ -49,7 +49,7 @@
 }
 
 .empty-state p {
-  color: var(--text-light);
+  color: var(--text-medium);
 }
 
 .users-grid {
@@ -93,14 +93,16 @@
 }
 
 .user-email {
-  color: var(--text-light);
+  color: var(--text-medium);
   font-size: 0.9rem;
   margin-bottom: 0.25rem;
+  font-weight: 500;
 }
 
 .user-date {
-  color: var(--text-light);
+  color: var(--text-medium);
   font-size: 0.85rem;
+  font-weight: 500;
 }
 
 .role-badge {

@@ -107,21 +107,41 @@
 
 .revenue-card {
   background: linear-gradient(135deg, var(--cream) 0%, var(--tan) 100%);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  box-shadow: 0 2px 8px var(--shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 12px rgba(58, 139, 153, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 120px;
   width: 100%;
   overflow: visible;
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.revenue-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--primary-gradient);
+  border-radius: 16px 16px 0 0;
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
 }
 
 .revenue-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px var(--shadow-hover);
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(58, 139, 153, 0.3);
+  border-color: var(--primary);
+}
+
+.revenue-card:hover::before {
+  transform: scaleX(1);
 }
 
 .revenue-monthly {
@@ -201,12 +221,13 @@
   font-weight: 600;
   margin: 0 0 0.5rem 0;
   color: var(--text-dark);
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .revenue-total .revenue-content h3 {
-  color: var(--white);
-  opacity: 0.9;
+  color: var(--primary-dark);
+  opacity: 1;
+  font-weight: 700;
 }
 
 .revenue-value {
@@ -227,8 +248,9 @@
 
 .revenue-count {
   font-size: 0.85rem;
-  color: var(--text-light);
+  color: var(--text-medium);
   margin: 0;
+  font-weight: 500;
 }
 
 .revenue-total .revenue-count {
@@ -243,18 +265,38 @@
 }
 
 .client-card {
-  background: var(--white);
-  border-radius: 12px;
+  background: linear-gradient(135deg, var(--white) 0%, #fafafa 100%);
+  border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px var(--shadow);
-  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(58, 139, 153, 0.15);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.client-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--primary-gradient);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
 }
 
 .client-card:hover {
-  box-shadow: 0 4px 12px var(--shadow-hover);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(58, 139, 153, 0.25);
+  transform: translateY(-4px);
+  border-color: var(--primary);
+}
+
+.client-card:hover::before {
+  transform: scaleX(1);
 }
 
 .client-header {

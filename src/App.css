@@ -212,7 +212,7 @@ textarea.editable {
 .empty-state {
   text-align: center;
   padding: 3rem;
-  color: var(--text-light);
+  color: var(--text-medium);
 }
 
 .empty-state svg {

@@ -91,7 +91,7 @@
 
 .message-description {
   font-size: 0.85rem;
-  color: var(--text-light);
+  color: var(--text-medium);
   margin: 0;
 }
 
@@ -122,7 +122,8 @@
 
 .message-character-count {
   font-size: 0.8rem;
-  color: var(--text-light);
+  color: var(--text-medium);
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {

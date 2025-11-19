@@ -95,8 +95,9 @@
 
 .idea-date {
   font-size: 0.8rem;
-  color: var(--text-light);
+  color: var(--text-medium);
   margin-top: auto;
   padding-top: 0.75rem;
   border-top: 1px solid var(--cream);
+  font-weight: 500;
 }

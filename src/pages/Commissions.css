@@ -94,7 +94,7 @@
 .stat-content h3 {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--text-medium);
+  color: var(--text-dark);
   margin: 0 0 0.5rem 0;
 }
 
@@ -242,8 +242,9 @@
 
 .seller-info {
   font-size: 0.85rem;
-  color: var(--text-medium);
+  color: var(--text-dark);
   font-style: italic;
+  opacity: 0.9;
 }
 
 .type-badge {
