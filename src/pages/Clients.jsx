@@ -4,8 +4,9 @@ import { storage } from '../utils/storage'
 import './Clients.css'
 
 const Clients = () => {
-  const { getUserKey, currentUser, calculateCommissions } = useUser()
+  const { getUserKey, currentUser, calculateCommissions, allFirebaseUsers } = useUser()
   const isAffiliate = currentUser?.role === 'affiliate'
+  const isAdmin = currentUser?.role === 'admin'
   const [clients, setClients] = useState([])
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const now = new Date()
@@ -14,37 +15,125 @@ const Clients = () => {
 
   useEffect(() => {
     const loadClients = async () => {
-      const saved = await storage.get(getUserKey('clients'), [])
-      if (saved && saved.length > 0) {
-        setClients(saved)
+      if (isAdmin) {
+        // Admin vê todos os clientes (próprios + de todos os afiliados)
+        const allClients = []
+        
+        // Carregar clientes do admin
+        const adminClients = await storage.get('clients', [])
+        if (adminClients && adminClients.length > 0) {
+          adminClients.forEach(client => {
+            allClients.push({ ...client, addedBy: currentUser.id, addedByName: currentUser.name || 'Admin' })
+          })
+        }
+        
+        // Carregar clientes de todos os afiliados
+        const affiliates = allFirebaseUsers.filter(u => u.role === 'affiliate')
+        for (const affiliate of affiliates) {
+          const affiliateClients = await storage.get(`${affiliate.id}_clients`, [])
+          if (affiliateClients && affiliateClients.length > 0) {
+            affiliateClients.forEach(client => {
+              allClients.push({ 
+                ...client, 
+                addedBy: affiliate.id, 
+                addedByName: affiliate.name || 'Afiliado' 
+              })
+            })
+          }
+        }
+        
+        setClients(allClients)
+      } else {
+        // Afiliado vê apenas seus próprios clientes
+        const saved = await storage.get(getUserKey('clients'), [])
+        if (saved && saved.length > 0) {
+          setClients(saved)
+        }
       }
     }
     loadClients()
 
     // Observar mudanças em tempo real (Firebase)
-    const unsubscribe = storage.subscribe(
-      getUserKey('clients'),
-      (data) => {
+    if (isAdmin) {
+      // Para admin, observar múltiplas chaves
+      const unsubscribes = []
+      
+      // Observar clientes do admin
+      const adminUnsub = storage.subscribe('clients', (data) => {
         if (data && data.length > 0) {
-          setClients(data)
+          loadClients() // Recarregar todos os clientes
         }
-      },
-      []
-    )
-
-    return () => {
-      if (unsubscribe) unsubscribe()
+      }, [])
+      unsubscribes.push(adminUnsub)
+      
+      // Observar clientes de afiliados
+      const affiliates = allFirebaseUsers.filter(u => u.role === 'affiliate')
+      affiliates.forEach(affiliate => {
+        const affiliateUnsub = storage.subscribe(`${affiliate.id}_clients`, (data) => {
+          if (data && data.length > 0) {
+            loadClients() // Recarregar todos os clientes
+          }
+        }, [])
+        unsubscribes.push(affiliateUnsub)
+      })
+      
+      return () => {
+        unsubscribes.forEach(unsub => {
+          if (unsub) unsub()
+        })
+      }
+    } else {
+      // Para afiliado, observar apenas sua própria chave
+      const unsubscribe = storage.subscribe(
+        getUserKey('clients'),
+        (data) => {
+          if (data && data.length > 0) {
+            setClients(data)
+          }
+        },
+        []
+      )
+      return () => {
+        if (unsubscribe) unsubscribe()
+      }
     }
-  }, [getUserKey])
+  }, [getUserKey, isAdmin, allFirebaseUsers, currentUser])
 
   useEffect(() => {
     const saveClients = async () => {
-      if (clients.length > 0 || Object.keys(clients).length > 0) {
-        await storage.set(getUserKey('clients'), clients)
+      if (isAdmin) {
+        // Admin salva apenas seus próprios clientes (sem os de afiliados)
+        const adminClients = clients.filter(c => !c.addedBy || c.addedBy === currentUser.id)
+        if (adminClients.length > 0 || Object.keys(adminClients).length > 0) {
+          await storage.set('clients', adminClients)
+        }
+        
+        // Salvar clientes de afiliados nos lugares corretos
+        const affiliateClientsMap = {}
+        clients.forEach(client => {
+          if (client.addedBy && client.addedBy !== currentUser.id) {
+            if (!affiliateClientsMap[client.addedBy]) {
+              affiliateClientsMap[client.addedBy] = []
+            }
+            affiliateClientsMap[client.addedBy].push(client)
+          }
+        })
+        
+        // Salvar cada grupo de clientes de afiliado
+        for (const [affiliateId, affiliateClients] of Object.entries(affiliateClientsMap)) {
+          if (affiliateClients.length > 0) {
+            await storage.set(`${affiliateId}_clients`, affiliateClients)
+          }
+        }
+      } else {
+        // Afiliado salva seus próprios clientes
+        if (clients.length > 0 || Object.keys(clients).length > 0) {
+          await storage.set(getUserKey('clients'), clients)
+        }
       }
     }
     saveClients()
-  }, [clients, getUserKey])
+  }, [clients, getUserKey, isAdmin, currentUser])
 
   const [showModal, setShowModal] = useState(false)
   const [showRevenueModal, setShowRevenueModal] = useState(false)
@@ -52,6 +141,7 @@ const Clients = () => {
   const [editingClient, setEditingClient] = useState(null)
   const [editingRevenueClient, setEditingRevenueClient] = useState(null)
   const [editingSiteClient, setEditingSiteClient] = useState(null)
+  const [calculatedCommission, setCalculatedCommission] = useState(null) // Comissão calculada automaticamente
   const [formData, setFormData] = useState({
     type: 'client',
     name: '',
@@ -65,6 +155,14 @@ const Clients = () => {
     status: 'prospect',
     notes: ''
   })
+
+  // Função para calcular comissão (20% do valor)
+  const calculateCommission = (value) => {
+    if (!value || value === '') return 0
+    const numValue = parseFloat(parseCurrency(value))
+    if (isNaN(numValue) || numValue <= 0) return 0
+    return numValue * 0.20 // 20% de comissão
+  }
 
   const statusOptions = [
     { value: 'prospect', label: 'Prospect', color: '#f39c12' },
@@ -141,22 +239,22 @@ const Clients = () => {
   const calculateRevenue = () => {
     let monthlyRevenue = 0
     let sitesRevenue = 0
-    let totalRevenue = 0 // Renda total para afiliados (clientes + sites)
+    let totalCommission = 0 // Comissão total para afiliados (20% do valor)
 
     clients.forEach(item => {
       if (item.type === 'client' && item.status === 'active') {
         const revenue = getClientRevenueForMonth(item, selectedMonth)
         monthlyRevenue += revenue
-        // Para afiliados, somar renda de clientes também
-        if (isAffiliate) {
-          totalRevenue += revenue
+        // Para afiliados, calcular comissão (20% do valor)
+        if (isAffiliate && item.addedBy === currentUser?.id) {
+          totalCommission += calculateCommission(revenue.toString())
         }
       } else if (item.type === 'site' && item.status === 'active') {
         const value = getSiteValueForMonth(item, selectedMonth)
         sitesRevenue += value
-        // Para afiliados, somar valor dos sites como renda
-        if (isAffiliate) {
-          totalRevenue += value
+        // Para afiliados, calcular comissão (20% do valor)
+        if (isAffiliate && item.addedBy === currentUser?.id) {
+          totalCommission += calculateCommission(value.toString())
         }
       }
     })
@@ -167,13 +265,14 @@ const Clients = () => {
       monthlyRevenue: monthlyRevenue || 0,
       sitesRevenue: sitesRevenue || 0,
       total: total || 0,
-      totalRevenue: totalRevenue || 0 // Renda total para afiliados
+      totalCommission: totalCommission || 0 // Comissão total para afiliados (20%)
     }
   }
 
   const revenue = calculateRevenue()
 
   const openModal = (client = null) => {
+    setCalculatedCommission(null) // Resetar comissão calculada
     if (client) {
       setEditingClient(client.id)
       setFormData({
@@ -189,6 +288,16 @@ const Clients = () => {
         status: client.status || 'prospect',
         notes: client.notes || ''
       })
+      // Calcular comissão se já houver valor no mês atual
+      if (isAffiliate) {
+        if (client.type === 'client' && client.monthlyRevenueHistory?.[selectedMonth]) {
+          const commission = calculateCommission(client.monthlyRevenueHistory[selectedMonth])
+          if (commission > 0) setCalculatedCommission(commission)
+        } else if (client.type === 'site' && client.siteValueHistory?.[selectedMonth]) {
+          const commission = calculateCommission(client.siteValueHistory[selectedMonth])
+          if (commission > 0) setCalculatedCommission(commission)
+        }
+      }
     } else {
       setEditingClient(null)
       setFormData({
@@ -233,6 +342,7 @@ const Clients = () => {
     setEditingClient(null)
     setEditingRevenueClient(null)
     setEditingSiteClient(null)
+    setCalculatedCommission(null) // Resetar comissão calculada
     setFormData({
       type: 'client',
       name: '',
@@ -255,6 +365,15 @@ const Clients = () => {
     if (editingClient) {
       const oldClient = clients.find(c => c.id === editingClient)
       updatedClient = { ...oldClient, ...formData }
+      // Manter addedBy se já existir
+      if (oldClient.addedBy) {
+        updatedClient.addedBy = oldClient.addedBy
+        updatedClient.addedByName = oldClient.addedByName
+      } else {
+        // Se não tinha addedBy, adicionar do usuário atual
+        updatedClient.addedBy = currentUser.id
+        updatedClient.addedByName = currentUser.name || (isAdmin ? 'Admin' : 'Afiliado')
+      }
       setClients(prev => prev.map(client => 
         client.id === editingClient ? updatedClient : client
       ))
@@ -262,6 +381,8 @@ const Clients = () => {
       updatedClient = {
         id: Date.now(),
         ...formData,
+        addedBy: currentUser.id,
+        addedByName: currentUser.name || (isAdmin ? 'Admin' : 'Afiliado'),
         createdAt: new Date().toISOString()
       }
       setClients(prev => [updatedClient, ...prev])
@@ -351,6 +472,11 @@ const Clients = () => {
         [month]: value
       }
     }))
+    // Calcular comissão automaticamente se for afiliado
+    if (isAffiliate && month === selectedMonth) {
+      const commission = calculateCommission(value)
+      setCalculatedCommission(commission > 0 ? commission : null)
+    }
   }
 
   const updateSiteValueForMonth = (month, value) => {
@@ -361,6 +487,11 @@ const Clients = () => {
         [month]: value
       }
     }))
+    // Calcular comissão automaticamente se for afiliado
+    if (isAffiliate && month === selectedMonth) {
+      const commission = calculateCommission(value)
+      setCalculatedCommission(commission > 0 ? commission : null)
+    }
   }
 
   const deleteClient = (id) => {
@@ -479,9 +610,9 @@ const Clients = () => {
             <div className="revenue-card revenue-commission">
               <div className="revenue-icon">💵</div>
               <div className="revenue-content">
-                <h3>Renda Total ({formatMonth(selectedMonth)})</h3>
-                <p className="revenue-value revenue-commission-value">{formatCurrency(revenue.totalRevenue)}</p>
-                <p className="revenue-count">Renda de clientes e sites que você adicionou</p>
+                <h3>Minha Comissão ({formatMonth(selectedMonth)})</h3>
+                <p className="revenue-value revenue-commission-value">{formatCurrency(revenue.totalCommission)}</p>
+                <p className="revenue-count">20% de comissão sobre clientes e sites ativos que você adicionou</p>
               </div>
             </div>
           </div>
@@ -512,6 +643,11 @@ const Clients = () => {
                     </div>
                     {client.company && (
                       <p className="client-company">{client.company}</p>
+                    )}
+                    {isAdmin && client.addedBy && client.addedBy !== currentUser?.id && client.addedByName && (
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginTop: '0.25rem' }}>
+                        👤 Adicionado por: {client.addedByName}
+                      </p>
                     )}
                   </div>
                   <span 
@@ -553,17 +689,23 @@ const Clients = () => {
                     </button>
                   </div>
                 )}
-                {/* Mostrar renda para afiliados */}
-                {isAffiliate && client.type === 'client' && (
+                {/* Mostrar comissão para afiliados (apenas se o cliente foi adicionado por eles) */}
+                {isAffiliate && client.addedBy === currentUser?.id && client.type === 'client' && (
                   <div className="client-revenue client-commission">
-                    <span className="revenue-label revenue-label-money">Renda Mensal ({formatMonth(selectedMonth)}):</span>
-                    <span className="revenue-amount commission-amount">{formatCurrency(currentRevenue)}</span>
+                    <span className="revenue-label revenue-label-money">Minha Comissão ({formatMonth(selectedMonth)}):</span>
+                    <span className="revenue-amount commission-amount">{formatCurrency(calculateCommission(currentRevenue.toString()))}</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginLeft: '0.5rem' }}>
+                      (20% de {formatCurrency(currentRevenue)})
+                    </span>
                   </div>
                 )}
-                {isAffiliate && client.type === 'site' && (
+                {isAffiliate && client.addedBy === currentUser?.id && client.type === 'site' && (
                   <div className="client-revenue client-commission">
-                    <span className="revenue-label revenue-label-site">Valor do Site ({formatMonth(selectedMonth)}):</span>
-                    <span className="revenue-amount commission-amount">{formatCurrency(currentSiteValue)}</span>
+                    <span className="revenue-label revenue-label-site">Minha Comissão ({formatMonth(selectedMonth)}):</span>
+                    <span className="revenue-amount commission-amount">{formatCurrency(calculateCommission(currentSiteValue.toString()))}</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginLeft: '0.5rem' }}>
+                      (20% de {formatCurrency(currentSiteValue)})
+                    </span>
                   </div>
                 )}
 
@@ -683,6 +825,19 @@ const Clients = () => {
                       onChange={(e) => updateRevenueForMonth(selectedMonth, e.target.value)}
                       placeholder="Ex: 1500 ou 1500,00"
                     />
+                    {isAffiliate && calculatedCommission !== null && calculatedCommission > 0 && (
+                      <div style={{ 
+                        marginTop: '0.5rem', 
+                        padding: '0.75rem', 
+                        backgroundColor: 'var(--cream)', 
+                        borderRadius: '8px',
+                        border: '2px solid var(--blue)',
+                        color: 'var(--blue)',
+                        fontWeight: 'bold'
+                      }}>
+                        💵 Comissão Calculada: {formatCurrency(calculatedCommission)} (20%)
+                      </div>
+                    )}
                   </div>
                 </>
               ) : (
@@ -695,6 +850,19 @@ const Clients = () => {
                       onChange={(e) => updateSiteValueForMonth(selectedMonth, e.target.value)}
                       placeholder="Ex: 5000 ou 5000,00"
                     />
+                    {isAffiliate && calculatedCommission !== null && calculatedCommission > 0 && (
+                      <div style={{ 
+                        marginTop: '0.5rem', 
+                        padding: '0.75rem', 
+                        backgroundColor: 'var(--cream)', 
+                        borderRadius: '8px',
+                        border: '2px solid var(--blue)',
+                        color: 'var(--blue)',
+                        fontWeight: 'bold'
+                      }}>
+                        💵 Comissão Calculada: {formatCurrency(calculatedCommission)} (20%)
+                      </div>
+                    )}
                   </div>
                   <div className="form-group">
                     <label>Comissão (R$)</label>
