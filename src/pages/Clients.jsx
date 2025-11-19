@@ -21,7 +21,7 @@ const Clients = () => {
         
         // Carregar clientes do admin
         const adminClients = await storage.get('clients', [])
-        if (adminClients && adminClients.length > 0) {
+        if (adminClients && Array.isArray(adminClients) && adminClients.length > 0) {
           adminClients.forEach(client => {
             allClients.push({ ...client, addedBy: currentUser.id, addedByName: currentUser.name || 'Admin' })
           })
@@ -31,7 +31,7 @@ const Clients = () => {
         const affiliates = allFirebaseUsers.filter(u => u.role === 'affiliate')
         for (const affiliate of affiliates) {
           const affiliateClients = await storage.get(`${affiliate.id}_clients`, [])
-          if (affiliateClients && affiliateClients.length > 0) {
+          if (affiliateClients && Array.isArray(affiliateClients) && affiliateClients.length > 0) {
             affiliateClients.forEach(client => {
               allClients.push({ 
                 ...client, 
@@ -46,8 +46,10 @@ const Clients = () => {
       } else {
         // Afiliado vê apenas seus próprios clientes
         const saved = await storage.get(getUserKey('clients'), [])
-        if (saved && saved.length > 0) {
+        if (saved && Array.isArray(saved) && saved.length > 0) {
           setClients(saved)
+        } else {
+          setClients([])
         }
       }
     }
@@ -60,7 +62,7 @@ const Clients = () => {
       
       // Observar clientes do admin
       const adminUnsub = storage.subscribe('clients', (data) => {
-        if (data && data.length > 0) {
+        if (data !== undefined) {
           loadClients() // Recarregar todos os clientes
         }
       }, [])
@@ -70,7 +72,7 @@ const Clients = () => {
       const affiliates = allFirebaseUsers.filter(u => u.role === 'affiliate')
       affiliates.forEach(affiliate => {
         const affiliateUnsub = storage.subscribe(`${affiliate.id}_clients`, (data) => {
-          if (data && data.length > 0) {
+          if (data !== undefined) {
             loadClients() // Recarregar todos os clientes
           }
         }, [])
@@ -101,12 +103,22 @@ const Clients = () => {
 
   useEffect(() => {
     const saveClients = async () => {
+      // Não salvar se não houver clientes (evita sobrescrever exclusões)
+      if (clients.length === 0) {
+        // Se for admin e não houver clientes próprios, limpar storage
+        if (isAdmin) {
+          const adminClients = clients.filter(c => !c.addedBy || c.addedBy === currentUser.id)
+          await storage.set('clients', adminClients)
+        } else {
+          await storage.set(getUserKey('clients'), [])
+        }
+        return
+      }
+      
       if (isAdmin) {
         // Admin salva apenas seus próprios clientes (sem os de afiliados)
         const adminClients = clients.filter(c => !c.addedBy || c.addedBy === currentUser.id)
-        if (adminClients.length > 0 || Object.keys(adminClients).length > 0) {
-          await storage.set('clients', adminClients)
-        }
+        await storage.set('clients', adminClients)
         
         // Salvar clientes de afiliados nos lugares corretos
         const affiliateClientsMap = {}
@@ -115,21 +127,19 @@ const Clients = () => {
             if (!affiliateClientsMap[client.addedBy]) {
               affiliateClientsMap[client.addedBy] = []
             }
-            affiliateClientsMap[client.addedBy].push(client)
+            // Remover metadados antes de salvar
+            const { addedBy, addedByName, ...clientWithoutMeta } = client
+            affiliateClientsMap[client.addedBy].push(clientWithoutMeta)
           }
         })
         
         // Salvar cada grupo de clientes de afiliado
         for (const [affiliateId, affiliateClients] of Object.entries(affiliateClientsMap)) {
-          if (affiliateClients.length > 0) {
-            await storage.set(`${affiliateId}_clients`, affiliateClients)
-          }
+          await storage.set(`${affiliateId}_clients`, affiliateClients)
         }
       } else {
         // Afiliado salva seus próprios clientes
-        if (clients.length > 0 || Object.keys(clients).length > 0) {
-          await storage.set(getUserKey('clients'), clients)
-        }
+        await storage.set(getUserKey('clients'), clients)
       }
     }
     saveClients()
@@ -494,9 +504,35 @@ const Clients = () => {
     }
   }
 
-  const deleteClient = (id) => {
+  const deleteClient = async (id) => {
     if (window.confirm('Tem certeza que deseja excluir este item?')) {
-      setClients(prev => prev.filter(client => client.id !== id))
+      const clientToDelete = clients.find(c => c.id === id)
+      if (!clientToDelete) return
+      
+      // Remover do estado
+      const updatedClients = clients.filter(client => client.id !== id)
+      setClients(updatedClients)
+      
+      // Salvar no storage correto
+      if (isAdmin) {
+        // Se for cliente do admin
+        if (!clientToDelete.addedBy || clientToDelete.addedBy === currentUser.id) {
+          const adminClients = updatedClients.filter(c => !c.addedBy || c.addedBy === currentUser.id)
+          await storage.set('clients', adminClients)
+        } else {
+          // Se for cliente de um afiliado, salvar no storage do afiliado
+          const affiliateClients = updatedClients
+            .filter(c => c.addedBy === clientToDelete.addedBy)
+            .map(c => {
+              const { addedBy, addedByName, ...clientWithoutMeta } = c
+              return clientWithoutMeta
+            })
+          await storage.set(`${clientToDelete.addedBy}_clients`, affiliateClients)
+        }
+      } else {
+        // Afiliado salva seus próprios clientes
+        await storage.set(getUserKey('clients'), updatedClients)
+      }
     }
   }
 
