@@ -29,9 +29,16 @@ const Sidebar = () => {
       ]
     : []
   
+  // Afiliados também podem acessar a página de Afiliados para cadastrar outros
+  const affiliateMenuItems = currentUser && currentUser.role === 'affiliate' && canAccessPage('affiliates')
+    ? [
+        { path: '/affiliates', label: 'Afiliados', icon: '🤝', key: 'affiliates' }
+      ]
+    : []
+  
   const menuItems = currentUser && currentUser.role === 'admin' 
     ? [...allMenuItems, ...adminMenuItems]
-    : allMenuItems.filter(item => canAccessPage(item.key))
+    : [...allMenuItems.filter(item => canAccessPage(item.key)), ...affiliateMenuItems]
 
   const isActive = (path) => {
     return location.pathname === path

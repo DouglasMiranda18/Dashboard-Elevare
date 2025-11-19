@@ -99,7 +99,7 @@ export const UserProvider = ({ children }) => {
             } else {
               // Criar novo usuário
               // Permissões padrão para novos afiliados
-              const defaultAffiliatePermissions = ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients', 'commissions']
+              const defaultAffiliatePermissions = ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients', 'commissions', 'affiliates']
               
               newUserData = {
                 id: firebaseUser.uid,
@@ -309,7 +309,7 @@ export const UserProvider = ({ children }) => {
       } else {
         // Criar novo documento do usuário no Firestore
         // Permissões padrão para novos afiliados
-        const defaultAffiliatePermissions = ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients']
+        const defaultAffiliatePermissions = ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients', 'commissions', 'affiliates']
         
         userData = {
           id: firebaseUser.uid,

@@ -864,15 +864,6 @@ const Clients = () => {
                       </div>
                     )}
                   </div>
-                  <div className="form-group">
-                    <label>Comissão (R$)</label>
-                    <input
-                      type="text"
-                      value={formData.siteCommission}
-                      onChange={(e) => setFormData({ ...formData, siteCommission: e.target.value })}
-                      placeholder="Ex: 500 ou 500,00"
-                    />
-                  </div>
                 </>
               )}
               <div className="form-group">

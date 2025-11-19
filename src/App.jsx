@@ -79,7 +79,7 @@ const AppContent = () => {
           <Route path="/checklists" element={<ProtectedRoute page="checklists"><Checklists /></ProtectedRoute>} />
           <Route path="/documents" element={<ProtectedRoute page="documents"><Documents /></ProtectedRoute>} />
           <Route path="/commissions" element={<ProtectedRoute page="commissions"><Commissions /></ProtectedRoute>} />
-          <Route path="/affiliates" element={<AdminRoute><Affiliates /></AdminRoute>} />
+          <Route path="/affiliates" element={<ProtectedRoute page="affiliates"><Affiliates /></ProtectedRoute>} />
           <Route path="/users" element={<AdminRoute><Users /></AdminRoute>} />
         </Routes>
       </main>

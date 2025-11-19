@@ -3,7 +3,9 @@ import { useUser } from '../contexts/UserContext'
 import './Affiliates.css'
 
 const Affiliates = () => {
-  const { allFirebaseUsers, addAffiliate, updateAffiliate, deleteAffiliate, fetchAllUsers, getAffiliateLevel } = useUser()
+  const { currentUser, allFirebaseUsers, addAffiliate, updateAffiliate, deleteAffiliate, fetchAllUsers, getAffiliateLevel } = useUser()
+  const isAdmin = currentUser?.role === 'admin'
+  const isAffiliate = currentUser?.role === 'affiliate'
   const [showModal, setShowModal] = useState(false)
   const [editingAffiliate, setEditingAffiliate] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -16,14 +18,20 @@ const Affiliates = () => {
   })
 
   // Filtrar apenas afiliados (excluir pendentes deletados)
-  const affiliates = allFirebaseUsers.filter(u => 
+  let affiliates = allFirebaseUsers.filter(u => 
     u.role === 'affiliate' && !u.deleted
   )
 
-  // Lista de afiliados disponíveis para recrutamento (excluindo o próprio se estiver editando)
-  const availableRecruiters = affiliates.filter(a => 
-    !editingAffiliate || a.id !== editingAffiliate
-  )
+  // Se for afiliado, mostrar apenas os afiliados que ele recrutou
+  if (isAffiliate && !isAdmin) {
+    affiliates = affiliates.filter(a => a.recruitedBy === currentUser.id)
+  }
+
+  // Lista de afiliados disponíveis para recrutamento
+  // Admin pode escolher qualquer afiliado, afiliado só pode recrutar diretamente (não pode escolher outro recrutador)
+  const availableRecruiters = isAdmin 
+    ? affiliates.filter(a => !editingAffiliate || a.id !== editingAffiliate)
+    : [] // Afiliados não podem escolher recrutador, será definido automaticamente
 
   const availablePages = [
     { key: 'home', label: 'Página Inicial', icon: '🏠' },
@@ -55,8 +63,8 @@ const Affiliates = () => {
         name: '',
         email: '',
         phone: '',
-        permissions: ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients', 'commissions'], // Permissões padrão
-        recruitedBy: null
+        permissions: ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients', 'commissions', 'affiliates'], // Permissões padrão
+        recruitedBy: isAffiliate && !isAdmin ? currentUser.id : null // Se for afiliado, definir automaticamente como recrutador
       })
     }
     setShowModal(true)
@@ -69,7 +77,7 @@ const Affiliates = () => {
       name: '',
       email: '',
       phone: '',
-      permissions: ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients'], // Permissões padrão
+        permissions: ['home', 'social-media', 'messages', 'packages', 'content-ideas', 'clients', 'commissions', 'affiliates'], // Permissões padrão
       recruitedBy: null
     })
   }
@@ -78,13 +86,30 @@ const Affiliates = () => {
     e.preventDefault()
     setLoading(true)
     try {
+      // Se for afiliado cadastrando novo afiliado, garantir que recruitedBy seja o próprio afiliado
+      const submitData = { ...formData }
+      if (isAffiliate && !isAdmin && !editingAffiliate) {
+        submitData.recruitedBy = currentUser.id
+      }
+      
       if (editingAffiliate) {
-        const result = await updateAffiliate(editingAffiliate, formData)
+        // Se for afiliado editando, não permitir mudar o recruitedBy
+        if (isAffiliate && !isAdmin) {
+          const existingAffiliate = affiliates.find(a => a.id === editingAffiliate)
+          if (existingAffiliate && existingAffiliate.recruitedBy === currentUser.id) {
+            submitData.recruitedBy = currentUser.id // Manter o mesmo recrutador
+          } else {
+            alert('Você não tem permissão para editar este afiliado')
+            setLoading(false)
+            return
+          }
+        }
+        const result = await updateAffiliate(editingAffiliate, submitData)
         if (!result.success) {
           alert('Erro ao atualizar afiliado: ' + result.error)
         }
       } else {
-        const result = await addAffiliate(formData)
+        const result = await addAffiliate(submitData)
         if (!result.success) {
           alert('Erro ao adicionar afiliado: ' + result.error)
         }
@@ -125,6 +150,15 @@ const Affiliates = () => {
   }
 
   const handleDelete = async (id) => {
+    // Se for afiliado, verificar se tem permissão para deletar (só pode deletar os que ele recrutou)
+    if (isAffiliate && !isAdmin) {
+      const affiliateToDelete = affiliates.find(a => a.id === id)
+      if (!affiliateToDelete || affiliateToDelete.recruitedBy !== currentUser.id) {
+        alert('Você não tem permissão para excluir este afiliado')
+        return
+      }
+    }
+    
     if (window.confirm('Tem certeza que deseja excluir este afiliado?')) {
       setLoading(true)
       try {
@@ -149,7 +183,7 @@ const Affiliates = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h1>Afiliados</h1>
-            <p>Gerencie afiliados e suas permissões de acesso</p>
+            <p>{isAdmin ? 'Gerencie afiliados e suas permissões de acesso' : 'Gerencie os afiliados que você recrutou'}</p>
           </div>
           <button className="btn btn-primary" onClick={() => openModal()}>
             + Novo Afiliado
@@ -309,30 +343,41 @@ const Affiliates = () => {
                 />
               </div>
 
-              <div className="form-group">
-                <label>Recrutado por (Opcional)</label>
-                <select
-                  value={formData.recruitedBy || ''}
-                  onChange={(e) => setFormData({ ...formData, recruitedBy: e.target.value || null })}
-                  className="form-select"
-                >
-                  <option value="">Nenhum (Nível 1)</option>
-                  {availableRecruiters.map(recruiter => (
-                    <option key={recruiter.id} value={recruiter.id}>
-                      {recruiter.name} {recruiter.pending ? '(Pendente)' : ''}
-                      {getAffiliateLevel && ` - Nível ${getAffiliateLevel(recruiter.id, allFirebaseUsers)}`}
-                    </option>
-                  ))}
-                </select>
-                <p className="form-hint">
-                  Selecione o afiliado que recrutou este novo afiliado. Isso define a hierarquia de comissões.
-                  {formData.recruitedBy && getAffiliateLevel && (
-                    <span className="level-preview">
-                      {' '}Este afiliado será Nível {getAffiliateLevel(formData.recruitedBy, allFirebaseUsers) + 1}
-                    </span>
-                  )}
-                </p>
-              </div>
+              {/* Campo "Recrutado por" apenas para admins */}
+              {isAdmin && (
+                <div className="form-group">
+                  <label>Recrutado por (Opcional)</label>
+                  <select
+                    value={formData.recruitedBy || ''}
+                    onChange={(e) => setFormData({ ...formData, recruitedBy: e.target.value || null })}
+                    className="form-select"
+                  >
+                    <option value="">Nenhum (Nível 1)</option>
+                    {availableRecruiters.map(recruiter => (
+                      <option key={recruiter.id} value={recruiter.id}>
+                        {recruiter.name} {recruiter.pending ? '(Pendente)' : ''}
+                        {getAffiliateLevel && ` - Nível ${getAffiliateLevel(recruiter.id, allFirebaseUsers)}`}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="form-hint">
+                    Selecione o afiliado que recrutou este novo afiliado. Isso define a hierarquia de comissões.
+                    {formData.recruitedBy && getAffiliateLevel && (
+                      <span className="level-preview">
+                        {' '}Este afiliado será Nível {getAffiliateLevel(formData.recruitedBy, allFirebaseUsers) + 1}
+                      </span>
+                    )}
+                  </p>
+                </div>
+              )}
+              {/* Informação para afiliados sobre recrutamento automático */}
+              {isAffiliate && !isAdmin && !editingAffiliate && (
+                <div className="info-card" style={{ marginBottom: '1rem', padding: '1rem', backgroundColor: 'var(--cream)', borderRadius: '8px' }}>
+                  <p style={{ margin: 0, color: 'var(--blue)', fontSize: '0.9rem' }}>
+                    ℹ️ Este novo afiliado será automaticamente vinculado a você como recrutador. Você receberá 5% de comissão sobre as vendas dele.
+                  </p>
+                </div>
+              )}
               
               <div className="form-group">
                 <label>Permissões de Acesso *</label>
